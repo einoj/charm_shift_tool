@@ -27,6 +27,8 @@ def main():
             time.sleep(120)
         elif message1=='SKIPPED!':
             time.sleep(600)
+        else:
+            time.sleep(600)
 
 def running():
 
@@ -62,7 +64,7 @@ def mwpc(filename, t_target, n_spills):
     df = mwpc_read(filename, t_target, n_spills)
 
     if not df.empty and df.ix[-1].max()>0.2:
-        df_s = mwpc_last_spills(df, filename)
+        df_s = mwpc_last_spills(df, filename, n_spills)
         df_a = mwpc_last_spills_avg(df, filename, n_spills)
         return 'OK!'
     elif df.empty:
@@ -101,7 +103,7 @@ def mwpc_read(filename, t_target, n_spills):
     return df
 
 
-def mwpc_last_spills(df, filename):
+def mwpc_last_spills(df, filename, n_spills):
     spacing = 6.0 # mm
     L = spacing*len(df.T)
     y_max = df.max().max()
@@ -109,6 +111,10 @@ def mwpc_last_spills(df, filename):
     fig = plt.figure()
     ax = fig.add_subplot(111)
     x = ((np.array(df.sum().index))*spacing)-(L/2.0)+(spacing/2)
+
+    colormap = plt.cm.gist_ncar
+    plt.gca().set_color_cycle([colormap(i) for i in np.linspace(0, 0.9, n_spills)])
+
     for i, index in enumerate(df.index):
         y = df.ix[i]
         index = str(index)
@@ -120,12 +126,16 @@ def mwpc_last_spills(df, filename):
     ax.set_xlabel('x [mm]')
     ax.set_ylabel('y')
     ax.set_title('MWPC ({}) {}'.format(sdate, filename))
-    ax.legend()
+    ax.legend(fancybox=True, framealpha=0.5)
     ax.set_ylim(top=y_max*1.2)
 
     figname = filename.split('_')[1].split('.')[0]
     filename_figure = '{}{}_1.png'.format(directory, figname)
-    fig.savefig(filename_figure)
+    try:
+        fig.savefig(filename_figure)
+    except IOError:
+        print('{} access denied!'.format(filename_figure))
+        pass
     plt.close(fig)
     return df
 
@@ -148,6 +158,7 @@ def mwpc_last_spills_avg(df, filename, n_spills):
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
+
     ax.errorbar(x,y, yerr=df_d, ls='steps-mid', label='{} spills'.format(n_spills), linewidth=2)
     ax.plot(x_f, y_f, label='Gaussian Fit', linewidth=2)
 
@@ -166,11 +177,15 @@ def mwpc_last_spills_avg(df, filename, n_spills):
     ax.set_ylabel('y')
     ax.set_title('MWPC Profile\n(file: {})'.format(filename))
     ax.set_ylim(top=y.max()*1.2)
-    ax.legend(numpoints=1)
+    ax.legend(numpoints=1, fancybox=True, framealpha=0.5)
 
     figname = filename.split('_')[1].split('.')[0]
     filename_figure = '{}{}_2.png'.format(directory, figname)
-    fig.savefig(filename_figure)
+    try:
+        fig.savefig(filename_figure)
+    except IOError:
+        print('{} access denied!'.format(filename_figure))
+        pass
     plt.close(fig)
     return df
 
