@@ -1,0 +1,21 @@
+* TODO User interface [0/4]
+- [ ] Setting for amount of time the beam is down before a message is sent
+- [ ] Setting for how much the intesity has to increase/decrease before a message is sent
+- [ ] Setting for how much the dose rate per hour has to change before a message is sent
+- [ ] Setting how low the intensity of the beam can be before an email is sent
+
+* TODO Message Contents [0/6]
+- [ ] How long has the beam been down
+- [ ] Mean of the BPM
+- [ ] Mean of the MWPC
+- [ ] FWHM of the BPM
+- [ ] FWHM of the MWPC
+- [ ] Intensity of beam, from SEC 1
+
+* TODO Other [0/1]
+- [ ] Ask Maurice Glaser how to obtain data from th BPM
+
+* Notes
+- Intensity can be gathered from SEC 1
+- The BPM and MWPC show beam profile with mean and FWHM
+- SEC 2 is affected too much by objects in the beamline and is therefore not used
