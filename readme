@@ -1,1 +1,6 @@
-The directory called ./archive contains some python files for programs that I currently use. There may be some functions that would be useful, for example the database reading script.
+The directory called ./archive contains some python files for programs that I currently use. There may be some functions that would be useful, for example the database reading script database_call_v0.py.
+
+More information for the database API can be found here:
+
+https://wikis.cern.ch/pages/viewpage.action?pageId=54067820&src=contextnavpagetreemode
+
