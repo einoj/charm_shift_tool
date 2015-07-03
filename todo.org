@@ -2,7 +2,6 @@
 - [ ] Setting for amount of time the beam is down before a message is sent
 - [ ] Setting for how much the intesity has to increase/decrease before a message is sent
 - [ ] Setting for how much the dose rate per hour has to change before a message is sent
-- [ ] Setting how low the intensity of the beam can be before an email is sent
 
 * TODO Message Contents [0/6]
 - [ ] How long has the beam been down
@@ -12,10 +11,19 @@
 - [ ] FWHM of the MWPC
 - [ ] Intensity of beam, from SEC 1
 
+* TODO Database for strong references and settings [2/3]
+- [X] Setup SQLITE3 database
+- [X] Write functions for opening and closing the database
+- [ ] Write function for inserting data to tables
+
 * TODO Other [0/1]
 - [ ] Ask Maurice Glaser how to obtain data from th BPM
+  Email sent, waiting for reply. 2015-07-03 Fri 10:23
 
 * Notes
 - Intensity can be gathered from SEC 1
 - The BPM and MWPC show beam profile with mean and FWHM
 - SEC 2 is affected too much by objects in the beamline and is therefore not used
+- Check data every 10 minutes.
+- In order to know how long the beam has been down, store the time that downtime was
+  detected
