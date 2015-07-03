@@ -11,10 +11,11 @@
 - [ ] FWHM of the MWPC
 - [ ] Intensity of beam, from SEC 1
 
-* TODO Database for strong references and settings [2/3]
+* TODO Database for strong references and settings [3/3]
 - [X] Setup SQLITE3 database
 - [X] Write functions for opening and closing the database
-- [ ] Write function for inserting data to tables
+- [X] Write functions for inserting data to tables
+- [ ] Write functions for changing values of settings and references
 
 * TODO Other [0/1]
 - [ ] Ask Maurice Glaser how to obtain data from th BPM
