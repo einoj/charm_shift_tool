@@ -47,6 +47,10 @@ def extract_xy_data(data_dict):
       data['mean']  = integralMean(i['data'])
       data['sigma'] = sigma(i['data'], data['mean'])
       data['fwhm'] = fwhm(data['sigma'])
+      int_arr = []
+      for j in i['data']:
+        int_arr.append(j[1])
+      data['intensity'] = max(int_arr)
       data_arr.append(data)
 
     return data_arr
@@ -57,5 +61,6 @@ def check_blm():
     data = dl_bpm_data(bpm_url+str(i))
     xdata = extract_xy_data(data['X'])
     ydata = extract_xy_data(data['Y'])
+    print(xdata[-1]['intensity'])
 
 check_blm()
