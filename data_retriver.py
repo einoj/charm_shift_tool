@@ -5,6 +5,7 @@ from pprint import pprint
 import numpy as np
 from archive.database_call_v0 import lgdb_tools
 from datetime import datetime, timedelta
+import pandas as pd
 
 bpm_url = "https://ps-irrad.web.cern.ch/irrad/bpm.php?bpmid=BPM_0"
 tf = '%Y-%m-%d %H:%M:%S'
@@ -78,17 +79,26 @@ class BPM:
   
 class MWPC:
 
-  def mwpc(filename, t_target, n_spills):
+  def read_mwpc(self, filename, t_target, n_spills):
       filename = './data/{}.csv'.format(filename)
 
-      df = mwpc_read(filename, t_target, n_spills)
+      headers = ['Time [local]']+[i for i in range(32)]
+      df = pd.read_csv(filename, delimiter=',', names=headers, index_col=False, skiprows=8)
+      df['Time [local]'] = pd.to_datetime(df['Time [local]'])
+      #df = df[df.columns[0].notnull()]
+      df = df.set_index('Time [local]')
+      df = df[:t_target][-n_spills:]
+      #check if no beam (i.e. no data in df)
+      #return df
+      print(df)
 
-      if not df.empty and df.ix[-1].max()>0.2:
-          df_s = mwpc_last_spills(df, filename, n_spills)
-          df_a = mwpc_last_spills_avg(df, filename, n_spills)
-          return 'OK!'
-      elif df.empty:
-          return 'SKIPPED!'
+
+      #if not df.empty and df.ix[-1].max()>0.2:
+      #    df_s = mwpc_last_spills(df, filename, n_spills)
+      #    df_a = mwpc_last_spills_avg(df, filename, n_spills)
+      #    return 'OK!'
+      #elif df.empty:
+      #    return 'SKIPPED!'
 
   def fetch_from_timber(self):
     variable_name_h = 'MWPC.ZT8.135:PROFILE_H'
@@ -109,11 +119,9 @@ class MWPC:
     output1 = a.get_data(variable_name_h, t1, t_now, filename_h)
     output2 = a.get_data(variable_name_v, t1, t_now, filename_v)
 
-    print(output1)
-    print(output2)
+    n_spills = 10
 
-    #n_spills = 10
-
+    self.read_mwpc(filename_v, t_check, n_spills)
     #message1 = mwpc(filename_h, t_check, n_spills)
     #message2 = mwpc(filename_v, t_check, n_spills)
 
