@@ -2,6 +2,7 @@ from urllib import request
 import re
 import json
 from pprint import pprint
+from scipy.optimize import curve_fit
 import numpy as np
 from archive.database_call_v0 import lgdb_tools
 from datetime import datetime, timedelta
@@ -78,6 +79,22 @@ class BPM:
 
   
 class MWPC:
+  def gaussian_fit_test(self,x_data,y_data):
+      y_offset = np.min(y_data)
+      x = np.array(x_data)
+      y = np.array(y_data)-y_offset
+
+      x_fine = np.arange(-100, 100, 0.1)  # x array, with finer resolution
+      p = [1.0, 1.0, 75.0]             # initial fit params
+      coeff, pcov = curve_fit(gauss, x, y, p) # fit the params, get coeffs
+      y_fit = gauss(x_fine, *coeff)+y_offset                      # make a nice gaussian with fine x array
+
+      peak,     centre,     sigma     = coeff
+      peak_err, centre_err, sigma_err = np.sqrt(np.diag(pcov))
+
+      fwhm = 2.355*sigma
+      err_sigma  = (sigma_err/sigma)*100                    # std/sigma, % error for the FWHM value
+      return x_fine, y_fit, fwhm, err_sigma, centre, centre_err
 
   def read_mwpc(self, filename, t_target, n_spills):
       filename = './data/{}.csv'.format(filename)
@@ -85,20 +102,46 @@ class MWPC:
       headers = ['Time [local]']+[i for i in range(32)]
       df = pd.read_csv(filename, delimiter=',', names=headers, index_col=False, skiprows=8)
       df['Time [local]'] = pd.to_datetime(df['Time [local]'])
-      #df = df[df.columns[0].notnull()]
       df = df.set_index('Time [local]')
       df = df[:t_target][-n_spills:]
-      #check if no beam (i.e. no data in df)
-      #return df
-      print(df)
+      return df
 
+  def get_mwpc_data(self):
+    n_spills = 10
+    vdata, hdata = self.fetch_from_timber()
 
-      #if not df.empty and df.ix[-1].max()>0.2:
-      #    df_s = mwpc_last_spills(df, filename, n_spills)
-      #    df_a = mwpc_last_spills_avg(df, filename, n_spills)
-      #    return 'OK!'
-      #elif df.empty:
-      #    return 'SKIPPED!'
+    vdata_s = vdata.sum()
+    vdata_d = vdata.std(axis=0)
+    hdata_s = vdata.sum()
+    hdata_d = vdata.std(axis=0)
+
+    v_start = str(vdata.index[0]).split('.')[0]
+    v_end   = str(vdata.index[-1]).split('.')[0]
+    h_start = str(hdata.index[0]).split('.')[0]
+    h_end   = str(hdata.index[-1]).split('.')[0]
+
+    spacing = 6.0 # mm
+    Lv = spacing*len(vdata_s.T)
+    v_y_max = vdata_s.max().max()
+    Lh = spacing*len(hdata_s.T)
+    h_y_max = hdata_s.max().max()
+
+    vx = ((np.array(vdata_s.index))*spacing)-(Lv/2.0)+(spacing/2)
+    vy = vdata_s.values/n_spills
+    hx = ((np.array(hdata_s.index))*spacing)-(Lh/2.0)+(spacing/2)
+    hy = hdata_s.values/n_spills
+
+    x_f, y_f, fwhm, err_sigma, centre, centre_err = self.gaussian_fit_test(vx, vy)
+    fwhm_v = fwhm
+
+    x_f, y_f, fwhm, err_sigma, centre, centre_err = self.gaussian_fit_test(hx, hy)
+    fwhm_h = fwhm
+
+    v_intensity = vdata.ix[-1].max()
+    h_intensity = hdata.ix[-1].max()
+
+    return v_intensity, h_intensity, fwhm_v, fwhm_h
+
 
   def fetch_from_timber(self):
     variable_name_h = 'MWPC.ZT8.135:PROFILE_H'
@@ -121,8 +164,7 @@ class MWPC:
 
     n_spills = 10
 
-    self.read_mwpc(filename_v, t_check, n_spills)
-    #message1 = mwpc(filename_h, t_check, n_spills)
-    #message2 = mwpc(filename_v, t_check, n_spills)
+    vdata = self.read_mwpc(filename_v, t_check, n_spills)
+    hdata = self.read_mwpc(filename_h, t_check, n_spills)
 
-    return #message1, message2
+    return vdata, hdata 

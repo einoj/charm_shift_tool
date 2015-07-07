@@ -19,7 +19,9 @@ def check_BPM():
 
 def check_MWPC():
   m = MWPC()
-  m.fetch_from_timber()
+  v_intensity, h_intensity, fwhm_v, fwhm_h = m.get_mwpc_data()
+  print(v_intensity, h_intensity, fwhm_v, fwhm_h)
+  
   
   return
 
