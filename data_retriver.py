@@ -3,12 +3,14 @@ import re
 import json
 from pprint import pprint
 import numpy as np
+from archive.database_call_v0 import lgdb_tools
 
+bpm_url = "https://ps-irrad.web.cern.ch/irrad/bpm.php?bpmid=BPM_0"
 
 def fwhm(sigma):
   return round(sigma*2.355,2)
 
-class Bpm:
+class BPM:
 
   def integralMean(self,data):
     weight = 0.0
@@ -26,8 +28,11 @@ class Bpm:
     for arr in data:
       W += arr[1]
       Q += arr[1]*(arr[0]-mean)*(arr[0]-mean)
-    s = np.sqrt(Q/W);
-    return round(s,2)
+    try:
+      s = np.sqrt(Q/W);
+      return round(s,2)
+    except ZeroDivisionError:
+      return 0.0
 
   # Returns dictionary that contains reference data aswell as the last 
   # 4 time stamped samplings
@@ -57,4 +62,42 @@ class Bpm:
 
       return data_arr
   
+  # returns the last samples from all the BPMs
+  # both in the Y and X axis
+  def get_bpm_data(self):
+    xdata = []
+    ydata = []
+    for i in range(1,5):
+      data = self.dl_bpm_data(bpm_url+str(i))
+      xdata = self.extract_xy_data(data['X'])
+      ydata = self.extract_xy_data(data['Y'])
+    return xdata, ydata
 
+  
+class MWPC:
+
+  def fetch_from_timber():
+    variable_name_h = 'MWPC.ZT8.135:PROFILE_H'
+    variable_name_v = 'MWPC.ZT8.135:PROFILE_V'
+
+    filename_v = 'mwpc_v'
+    filename_h = 'mwpc_h'
+
+    t1 = (datetime.now()-timedelta(hours=1)).strftime(tf)
+    #t1 = '2015-05-18 20:00:00'
+    t_now = (datetime.now()).strftime(tf)
+    #t2 = '2015-05-20 06:00:00'
+
+    t_check = t_now
+    #t_check = '2015-05-26 06:00:01'
+
+    a = lgdb_tools()
+    output1 = a.get_data(variable_name_h, t1, t_now, filename_h)
+    output1 = a.get_data(variable_name_v, t1, t_now, filename_v)
+
+    n_spills = 10
+
+    message1 = mwpc(filename_h, t_check, n_spills)
+    message2 = mwpc(filename_v, t_check, n_spills)
+
+    return message1, message2
