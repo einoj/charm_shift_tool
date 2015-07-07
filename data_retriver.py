@@ -78,6 +78,18 @@ class BPM:
   
 class MWPC:
 
+  def mwpc(filename, t_target, n_spills):
+      filename = './data/{}.csv'.format(filename)
+
+      df = mwpc_read(filename, t_target, n_spills)
+
+      if not df.empty and df.ix[-1].max()>0.2:
+          df_s = mwpc_last_spills(df, filename, n_spills)
+          df_a = mwpc_last_spills_avg(df, filename, n_spills)
+          return 'OK!'
+      elif df.empty:
+          return 'SKIPPED!'
+
   def fetch_from_timber(self):
     variable_name_h = 'MWPC.ZT8.135:PROFILE_H'
     variable_name_v = 'MWPC.ZT8.135:PROFILE_V'
@@ -95,11 +107,14 @@ class MWPC:
 
     a = lgdb_tools()
     output1 = a.get_data(variable_name_h, t1, t_now, filename_h)
-    output1 = a.get_data(variable_name_v, t1, t_now, filename_v)
+    output2 = a.get_data(variable_name_v, t1, t_now, filename_v)
 
-    n_spills = 10
+    print(output1)
+    print(output2)
 
-    message1 = mwpc(filename_h, t_check, n_spills)
-    message2 = mwpc(filename_v, t_check, n_spills)
+    #n_spills = 10
 
-    return message1, message2
+    #message1 = mwpc(filename_h, t_check, n_spills)
+    #message2 = mwpc(filename_v, t_check, n_spills)
+
+    return #message1, message2

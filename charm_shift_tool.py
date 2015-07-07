@@ -19,8 +19,8 @@ def check_BPM():
 
 def check_MWPC():
   m = MWPC()
-  msg1, msg2 = m.fetch_from_timber()
-  print(msg1, msg2)
+  m.fetch_from_timber()
+  
   return
 
 def check_SEC():
