@@ -79,6 +79,12 @@ class BPM:
 
   
 class MWPC:
+
+  def gauss(self, x, A, mu, sigma):
+      p = -(x-mu)**2/(2.*sigma**2)
+      p = list(p) # need to convert to list in order for np.exp to work
+      return A*np.exp(p)
+
   def gaussian_fit_test(self,x_data,y_data):
       y_offset = np.min(y_data)
       x = np.array(x_data)
@@ -86,8 +92,8 @@ class MWPC:
 
       x_fine = np.arange(-100, 100, 0.1)  # x array, with finer resolution
       p = [1.0, 1.0, 75.0]             # initial fit params
-      coeff, pcov = curve_fit(gauss, x, y, p) # fit the params, get coeffs
-      y_fit = gauss(x_fine, *coeff)+y_offset                      # make a nice gaussian with fine x array
+      coeff, pcov = curve_fit(self.gauss, x, y, p) # fit the params, get coeffs
+      y_fit = self.gauss(x_fine, *coeff)+y_offset                      # make a nice gaussian with fine x array
 
       peak,     centre,     sigma     = coeff
       peak_err, centre_err, sigma_err = np.sqrt(np.diag(pcov))
