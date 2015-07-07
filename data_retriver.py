@@ -4,8 +4,10 @@ import json
 from pprint import pprint
 import numpy as np
 from archive.database_call_v0 import lgdb_tools
+from datetime import datetime, timedelta
 
 bpm_url = "https://ps-irrad.web.cern.ch/irrad/bpm.php?bpmid=BPM_0"
+tf = '%Y-%m-%d %H:%M:%S'
 
 def fwhm(sigma):
   return round(sigma*2.355,2)
@@ -76,7 +78,7 @@ class BPM:
   
 class MWPC:
 
-  def fetch_from_timber():
+  def fetch_from_timber(self):
     variable_name_h = 'MWPC.ZT8.135:PROFILE_H'
     variable_name_v = 'MWPC.ZT8.135:PROFILE_V'
 

@@ -11,21 +11,22 @@
 - [ ] FWHM of the MWPC
 - [ ] Intensity of beam, from SEC 1
 
-* TODO Data retrival [2/2]
+* TODO Data retrival [2/4]
 - [X] Write code to download BPM data from https://ps-irrad.web.cern.ch/irrad/bpm.php
 - [X] Write regex to extract data from the html downloaded in the point above.
 - [ ] Write a class for getting data from MWPC, can be based on adams code.
 - [ ] Write a class for getting data from the SEC.
 
-* TODO Database for strong references and settings [3/3]
+* TODO Database for strong references and settings [3/4]
 - [X] Setup SQLITE3 database
 - [X] Write functions for opening and closing the database
 - [X] Write functions for inserting data to tables
 - [ ] Write functions for changing values of settings and references
 
-* TODO Other [0/1]
-- [ ] Ask Maurice Glaser how to obtain data from th BPM
-  Email sent, waiting for reply. 2015-07-03 Fri 10:23
+* TODO Other [1/1]
+- [X] Ask Maurice Glaser how to obtain data from th BPM.
+  Email sent, waiting for reply. 2015-07-03 Fri 10:23.
+  Wrote function for extracting the data from https://ps-irrad.web.cern.ch/irrad/bpm.php, making this unnesseary.
 
 * Notes
 - Intensity can be gathered from SEC 1

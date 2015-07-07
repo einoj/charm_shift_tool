@@ -8,9 +8,13 @@ class lgdb_tools(object):
         self.j_api_str = '{} -jar {} -M DS -vs {} -t1 "{}" -t2 "{}" -N {} -F CSV -MD'
 
     def get_data(self, variable_name, t1, t2, filename):
+      try:
         self.j_api_command = self.j_api_str.format(self.java, self.jarfile, variable_name, t1, t2, filename)
         self.p_call()
         return self.p.communicate()
+      except FileNotFoundError:
+        print("Error: Please install Java!")
+        exit(-1)
 
     def p_call(self):
         self.p = subprocess.Popen(self.j_api_command,
