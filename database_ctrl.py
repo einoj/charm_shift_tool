@@ -19,6 +19,12 @@ default_pos = []
 
 class db_commands:
     def __init__(self):
+        '''
+        Here I'm not sure if it's better to leave the database open and close manually after, or do
+        as you are now and open and close within each function. Either way would work, and I guess
+        closing it after each call is cleaner and potentially safer.
+        :return:
+        '''
         self.load_db()
         # Make sure that tables exist
         self.cur.execute('create table if not exists ' + set_table + ' (id int, name text, setting int)')
