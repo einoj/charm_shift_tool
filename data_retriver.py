@@ -22,7 +22,7 @@ class Timber_detectors(object):
     output = a.get_data(variable_name, t1, t_now, filename)
     return output
 
-  def read_timber_data(self, filename, t_target, n_spills, headers):
+  def read_timber_data(self, filename, t_target, headers):
       filename = './data/{}.csv'.format(filename)
       df = pd.read_csv(filename, delimiter=',', names=headers, index_col=False, skiprows=8)
       df['Time [local]'] = pd.to_datetime(df['Time [local]'])
@@ -95,7 +95,6 @@ class BPM:
       xdata = self.extract_xy_data(data['X'])
       ydata = self.extract_xy_data(data['Y'])
     return xdata, ydata
-
   
 class MWPC(Timber_detectors):
 
@@ -121,25 +120,23 @@ class MWPC(Timber_detectors):
     except ZeroDivisionError:
       return 0.0
 
-  def get_mwpc_data(self):
+  def get_data(self):
     n_spills = 10
     variable_name_h = 'MWPC.ZT8.135:PROFILE_H'
     variable_name_v = 'MWPC.ZT8.135:PROFILE_V'
     filename_v = 'mwpc_v'
     filename_h = 'mwpc_h'
+    headers = ['Time [local]']+[i for i in range(32)]
 
     self.fetch_from_timber(variable_name_v, filename_v)
     self.fetch_from_timber(variable_name_h, filename_h)
 
     t_now = (datetime.now()).strftime(tf)
-    headers = ['Time [local]']+[i for i in range(32)]
-    vdata = self.read_timber_data(filename_v, t_now, n_spills, headers) 
-    hdata = self.read_timber_data(filename_h, t_now, n_spills, headers) 
+    vdata = self.read_timber_data(filename_v, t_now, headers) 
+    hdata = self.read_timber_data(filename_h, t_now, headers) 
 
     vdata = vdata[:t_now][-n_spills:]
     hdata = hdata[:t_now][-n_spills:]
-
-    print(vdata, hdata)
 
     vdata_s = vdata.sum()
     vdata_d = vdata.std(axis=0)
@@ -166,9 +163,6 @@ class MWPC(Timber_detectors):
     #x_f, y_f, fwhm, err_sigma, centre, centre_err = self.gaussian_fit_test(vx, vy)
     #fwhm_v = fwhm
 
-    #print(vx, vy)
-    #print('\n')
-    #print(hx,hy)
     fwhm_v = 2.355*self.sigma(vx,vy,self.integralMean(vx,vy))
     fwhm_h = 2.355*self.sigma(hx,hy,self.integralMean(hx,hy))
 
@@ -181,6 +175,18 @@ class MWPC(Timber_detectors):
 
     return v_intensity, h_intensity, fwhm_v, fwhm_h
 
-class SEC:
-  def fetch_from_timber(self):
+class SEC(Timber_detectors):
+  def __init__(self):
+    self.calibration = {
+        'SEC1': 2.2E7
+    }
+  def get_data(self):
+    variable_name = 'MSC01.ZT8.107:COUNTS'
+    filename = 'sec1_data'
     headers = ['Time [local]','Counts']
+
+    self.fetch_from_timber(variable_name, filename)
+    t_now = (datetime.now()).strftime(tf)
+    data = self.read_timber_data(filename, t_now, headers)
+    data['pot/spill'] = data['Counts'].values*self.calibration['SEC1']
+    return data
