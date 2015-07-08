@@ -2,7 +2,7 @@ from urllib import request
 import re
 import json
 from pprint import pprint
-from scipy.optimize import curve_fit
+#from scipy.optimize import curve_fit
 import numpy as np
 from archive.database_call_v0 import lgdb_tools
 from datetime import datetime, timedelta
@@ -13,6 +13,21 @@ tf = '%Y-%m-%d %H:%M:%S'
 
 def fwhm(sigma):
   return round(sigma*2.355,2)
+
+class Timber_detectors(object):
+  def fetch_from_timber(self, variable_name, filename):
+    a = lgdb_tools()
+    t1 = (datetime.now()-timedelta(hours=1)).strftime(tf)
+    t_now = (datetime.now()).strftime(tf)
+    output = a.get_data(variable_name, t1, t_now, filename)
+    return output
+
+  def read_timber_data(self, filename, t_target, n_spills, headers):
+      filename = './data/{}.csv'.format(filename)
+      df = pd.read_csv(filename, delimiter=',', names=headers, index_col=False, skiprows=8)
+      df['Time [local]'] = pd.to_datetime(df['Time [local]'])
+      df = df.set_index('Time [local]')
+      return df
 
 class BPM:
 
@@ -52,6 +67,10 @@ class BPM:
   def extract_xy_data(self, data_dict):
       data_arr = []
       
+       # i in data_dict are each a dictionary which contains
+       # the data array on index 'data'. The data array is
+       # devided into several smaller arrays each containing x and y values like this
+       # [[x0,y0], [x1,y1], ..., [xn,yn]]
       for i in data_dict:
         data = {}
         data['title'] = i['title']
@@ -78,48 +97,54 @@ class BPM:
     return xdata, ydata
 
   
-class MWPC:
+class MWPC(Timber_detectors):
 
-  def gauss(self, x, A, mu, sigma):
-      p = -(x-mu)**2/(2.*sigma**2)
-      p = list(p) # need to convert to list in order for np.exp to work
-      return A*np.exp(p)
+  def integralMean(self,x,y):
+    weight = 0.0
+    weightedSum = 0.0
+    for i in range(len(x)):
+      weight += y[i]
+      weightedSum += y[i]*x[i];
+    if(weight == 0):
+      return (0)
+    return round(weightedSum/weight,2)
 
-  def gaussian_fit_test(self,x_data,y_data):
-      y_offset = np.min(y_data)
-      x = np.array(x_data)
-      y = np.array(y_data)-y_offset
-
-      x_fine = np.arange(-100, 100, 0.1)  # x array, with finer resolution
-      p = [1.0, 1.0, 75.0]             # initial fit params
-      coeff, pcov = curve_fit(self.gauss, x, y, p) # fit the params, get coeffs
-      y_fit = self.gauss(x_fine, *coeff)+y_offset                      # make a nice gaussian with fine x array
-
-      peak,     centre,     sigma     = coeff
-      peak_err, centre_err, sigma_err = np.sqrt(np.diag(pcov))
-
-      fwhm = 2.355*sigma
-      err_sigma  = (sigma_err/sigma)*100                    # std/sigma, % error for the FWHM value
-      return x_fine, y_fit, fwhm, err_sigma, centre, centre_err
-
-  def read_mwpc(self, filename, t_target, n_spills):
-      filename = './data/{}.csv'.format(filename)
-
-      headers = ['Time [local]']+[i for i in range(32)]
-      df = pd.read_csv(filename, delimiter=',', names=headers, index_col=False, skiprows=8)
-      df['Time [local]'] = pd.to_datetime(df['Time [local]'])
-      df = df.set_index('Time [local]')
-      df = df[:t_target][-n_spills:]
-      return df
+  def sigma(self, x, y, mean):
+    W = 0.0
+    Q = 0.0
+    for i in range(len(x)):
+      W += y[i]
+      Q += y[i]*(x[i]-mean)*(x[i]-mean)
+    try:
+      s = np.sqrt(Q/W);
+      return round(s,2)
+    except ZeroDivisionError:
+      return 0.0
 
   def get_mwpc_data(self):
     n_spills = 10
-    vdata, hdata = self.fetch_from_timber()
+    variable_name_h = 'MWPC.ZT8.135:PROFILE_H'
+    variable_name_v = 'MWPC.ZT8.135:PROFILE_V'
+    filename_v = 'mwpc_v'
+    filename_h = 'mwpc_h'
+
+    self.fetch_from_timber(variable_name_v, filename_v)
+    self.fetch_from_timber(variable_name_h, filename_h)
+
+    t_now = (datetime.now()).strftime(tf)
+    headers = ['Time [local]']+[i for i in range(32)]
+    vdata = self.read_timber_data(filename_v, t_now, n_spills, headers) 
+    hdata = self.read_timber_data(filename_h, t_now, n_spills, headers) 
+
+    vdata = vdata[:t_now][-n_spills:]
+    hdata = hdata[:t_now][-n_spills:]
+
+    print(vdata, hdata)
 
     vdata_s = vdata.sum()
     vdata_d = vdata.std(axis=0)
-    hdata_s = vdata.sum()
-    hdata_d = vdata.std(axis=0)
+    hdata_s = hdata.sum()
+    hdata_d = hdata.std(axis=0)
 
     v_start = str(vdata.index[0]).split('.')[0]
     v_end   = str(vdata.index[-1]).split('.')[0]
@@ -137,40 +162,25 @@ class MWPC:
     hx = ((np.array(hdata_s.index))*spacing)-(Lh/2.0)+(spacing/2)
     hy = hdata_s.values/n_spills
 
-    x_f, y_f, fwhm, err_sigma, centre, centre_err = self.gaussian_fit_test(vx, vy)
-    fwhm_v = fwhm
+    #fwhm_v = 2.355*np.std(vy)
+    #x_f, y_f, fwhm, err_sigma, centre, centre_err = self.gaussian_fit_test(vx, vy)
+    #fwhm_v = fwhm
 
-    x_f, y_f, fwhm, err_sigma, centre, centre_err = self.gaussian_fit_test(hx, hy)
-    fwhm_h = fwhm
+    #print(vx, vy)
+    #print('\n')
+    #print(hx,hy)
+    fwhm_v = 2.355*self.sigma(vx,vy,self.integralMean(vx,vy))
+    fwhm_h = 2.355*self.sigma(hx,hy,self.integralMean(hx,hy))
+
+    #fwhm_h = 2.355*np.std(hy)
+    #x_f, y_f, fwhm, err_sigma, centre, centre_err = self.gaussian_fit_test(hx, hy)
+    #fwhm_h = fwhm
 
     v_intensity = vdata.ix[-1].max()
     h_intensity = hdata.ix[-1].max()
 
     return v_intensity, h_intensity, fwhm_v, fwhm_h
 
-
+class SEC:
   def fetch_from_timber(self):
-    variable_name_h = 'MWPC.ZT8.135:PROFILE_H'
-    variable_name_v = 'MWPC.ZT8.135:PROFILE_V'
-
-    filename_v = 'mwpc_v'
-    filename_h = 'mwpc_h'
-
-    t1 = (datetime.now()-timedelta(hours=1)).strftime(tf)
-    #t1 = '2015-05-18 20:00:00'
-    t_now = (datetime.now()).strftime(tf)
-    #t2 = '2015-05-20 06:00:00'
-
-    t_check = t_now
-    #t_check = '2015-05-26 06:00:01'
-
-    a = lgdb_tools()
-    output1 = a.get_data(variable_name_h, t1, t_now, filename_h)
-    output2 = a.get_data(variable_name_v, t1, t_now, filename_v)
-
-    n_spills = 10
-
-    vdata = self.read_mwpc(filename_v, t_check, n_spills)
-    hdata = self.read_mwpc(filename_h, t_check, n_spills)
-
-    return vdata, hdata 
+    headers = ['Time [local]','Counts']

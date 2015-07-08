@@ -11,11 +11,17 @@ class lgdb_tools(object):
     def get_java_install_location(self):
       osname = os.name
       if osname == "nt":
-        retstr = subprocess.check_output(["where", "java"])
-        retstr = retstr[:-2] # remove the \r\n, or java wont run
-        retstr = retstr.decode("utf-8")
+        # Unfortunatley this does not work when running 32-bit python on 64-bit windows
+        # because "where java" returns C:\Windows\system32\java.exe, however windows
+        # will redirect 32-bit applications from system32 to WoW64, thus python will
+        # try to run C:\Windows\WoW64\java.exe which does not exist... Thus it is assumed
+        # that java is installed to the default location instead
+        #retstr = subprocess.check_output(["java", "-version"],stderr=subprocess.STDOUT,shell=True)
+        #retstr = retstr[:-2] # remove the \r\n, or java wont run
+        #retstr = retstr.decode("utf-8")
+        retstr = "C:\Program Files\Java\jre7\\bin\java.exe" 
         if not os.path.isfile(retstr):
-          print("Error: Please install Java!")
+          print("Error: Please install Java to " + "C:\Program Files\Java\jre7\\bin\java.exe")
           exit(-1)
       elif osname == "posix":
         retstr = subprocess.check_output(["which", "java"])
