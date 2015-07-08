@@ -92,8 +92,8 @@ class BPM:
     ydata = []
     for i in range(1,5):
       data = self.dl_bpm_data(bpm_url+str(i))
-      xdata = self.extract_xy_data(data['X'])
-      ydata = self.extract_xy_data(data['Y'])
+      xdata.append(self.extract_xy_data(data['X']))
+      ydata.append(self.extract_xy_data(data['Y']))
     return xdata, ydata
   
 class MWPC(Timber_detectors):
