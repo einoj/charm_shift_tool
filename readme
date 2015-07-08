@@ -4,3 +4,11 @@ More information for the database API can be found here (Command Line Usage):
 
 https://wikis.cern.ch/pages/viewpage.action?pageId=54067820&src=contextnavpagetreemode
 
+### Dependencies
+
+- Python 3.X
+- Java 7.x
+- Numpy
+- Pandas
+- python-dateutil
+- scipy
