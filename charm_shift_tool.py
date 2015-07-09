@@ -1,7 +1,11 @@
 from data_retriver import BPM, MWPC, SEC
 from datetime import datetime, timedelta
+from email_tools import alert
 
 deviation = .3
+calibration = {
+    'SEC1': 2.2E7
+}
 
 def roundTime(dt=None, roundTo=60):
     '''
@@ -46,20 +50,18 @@ def check_MWPC():
 def check_SEC():
   s = SEC()
   data = s.get_data()
+  reference = 3.5e11
   now = roundTime(datetime.now(), roundTo=60*60)
   try:
+    intensity = (data['pot/spill'].mean())
     last_spill = data.index[-1]
     warning = '{} - PROBLEM! NO BEAM SINCE {}!'.format(datetime.now(), last_spill)
   except IndexError:
-    last_spill = datetime.strptime(t1, tf)
-    warning = '{} - PROBLEM! NO BEAM FOR OVER 2 HOURS!'.format(datetime.now())
-  d = (now-last_spill)
-  if d.seconds>(45.0*60):
-    print(warning)
-    #alert('CHARM No Beam!', warning)
-  else:
-    print('{} - BEAM CHECK OK!'.format(now))
-  return
+    return warning
+  if ((intensity > (1+deviation)*reference) or (intensity < (1-deviation)*reference)):
+    msg =  'SEC1 intesity: ' + str(intensity) + ' reference: ' + str(intensity)
+  msg = ''
+  return msg
 
 xmsg, ymsg = check_BPM()
 print(xmsg)
@@ -68,4 +70,8 @@ print("\n")
 mwpc_msg = check_MWPC()
 print(mwpc_msg)
 print("\n")
-check_SEC()
+sec_msg = check_SEC()
+print(sec_msg)
+print("\n")
+
+alert("Warning", xmsg+ymsg+mwpc_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')

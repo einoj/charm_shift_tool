@@ -207,6 +207,7 @@ class SEC(Timber_detectors):
 
     self.fetch_from_timber(variable_name, filename)
     t_now = (datetime.now()).strftime(tf)
+    print (t_now)
     data = self.read_timber_data(filename, t_now, headers)
     data['pot/spill'] = data['Counts'].values*self.calibration['SEC1']
     return data
