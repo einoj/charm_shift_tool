@@ -17,21 +17,25 @@ def roundTime(dt=None, roundTo=60):
     rounding = (seconds+roundTo/2) // roundTo * roundTo
     return dt + timedelta(0,rounding-seconds,-dt.microsecond)
 
-def check_BPM():
+def bpm_msg(data, axis):
   # BPMs are numbered 1 through 4
   # index 0 contains refrence data,
   # and the last index contains the most recent sampling
-  b = BPM()
-  ret_str  = ""
-  xdata, ydata = b.get_bpm_data()
-  for i in range(len(xdata)):
+  msg = axis 
+  for d in data:
     for j in  ('intensity','fwhm'):
-      if j == 'fwhm':
-        print ("FWHM = " + str(xdata[i][-1][j]) + " ref = " + str(xdata[i][0][j]))
-      if ((xdata[i][-1][j] > (1+deviation)*xdata[i][0][j]) or (xdata[i][-1][j] < (1-deviation)*xdata[i][0][j])):
-        print("Large deviation in the " + j + " of BPM" + str(i))
-        print(" reference " + j + " " + str(xdata[i][0][j]))
-        print(" current " + j + " " + str(xdata[i][-1][j]))
+      if ((d[-1][j] > (1+deviation)*d[0][j]) or (d[-1][j] < (1-deviation)*d[0][j])):
+        msg += 'Large deviation in the ' + j + ' of ' + str(d[-1]['title']) + '\n'
+        msg += ' reference ' + j + ' ' + str(d[0][j]) + '\n'
+        msg += ' current ' + j + ' ' + str(d[-1][j]) + '\n'
+  return msg
+
+def check_BPM():
+  b = BPM()
+  xdata, ydata = b.get_bpm_data()
+  xmsg = bpm_msg(xdata, 'x-axis\n')
+  ymsg = bpm_msg(ydata, 'y-axis\n')
+  return xmsg, ymsg
 
 def check_MWPC():
   m = MWPC()
@@ -57,7 +61,9 @@ def check_SEC():
     print('{} - BEAM CHECK OK!'.format(now))
   return
 
-check_BPM()
+xmsg, ymsg = check_BPM()
+print(xmsg)
+print(ymsg)
 print("\n")
 check_MWPC()
 print("\n")

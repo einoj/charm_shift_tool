@@ -11,14 +11,15 @@
 - [ ] FWHM of the MWPC
 - [ ] Intensity of beam, from SEC 1
 
-* TODO Data retrival [4/7]
+* TODO Data retrival [5/7]
 - [X] Write code to download BPM data from https://ps-irrad.web.cern.ch/irrad/bpm.php
 - [X] Write regex to extract data from the html downloaded in the point above.
 - [X] Write a class for getting data from MWPC, can be based on adams code.
 - [X] Write a class for getting data from the SEC.
 - [ ] Implement the method for finding the fwhm of the MWPC that adam used, and compare it to the one currentyl in use
-- [ ] Fix the checking of the BPM using 3 indexes, also currently only checking the x-axis
+- [X] Fix the checking of the BPM using 3 indexes, also currently only checking the x-axis
 - [ ] Fix the check for SEC 1 as is currently saying there is no beam even when there is
+- [ ] Fix that the MWPC class crashes when there is no beam.
 
 * TODO Database for strong references and settings [3/4]
 - [X] Setup SQLITE3 database
