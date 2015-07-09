@@ -40,8 +40,8 @@ def check_BPM():
 def check_MWPC():
   m = MWPC()
   v_intensity, h_intensity, fwhm_v, fwhm_h = m.get_data()
-  print(v_intensity, h_intensity, fwhm_v, fwhm_h)
-  return
+  msg = "Vertical intesity: " + str(v_intensity) + " Horizontal intensity: " + str(h_intensity) + " Vertical FWHM: " + str(fwhm_v) + " Horizontal FWHM: " + str(fwhm_h)
+  return msg
 
 def check_SEC():
   s = SEC()
@@ -65,6 +65,7 @@ xmsg, ymsg = check_BPM()
 print(xmsg)
 print(ymsg)
 print("\n")
-check_MWPC()
+mwpc_msg = check_MWPC()
+print(mwpc_msg)
 print("\n")
 check_SEC()
