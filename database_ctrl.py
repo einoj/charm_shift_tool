@@ -30,6 +30,7 @@ class db_commands:
         self.cur.execute('create table if not exists ' + set_table + ' (id int, name text, setting int)')
         self.cur.execute('create table if not exists ' + pos_table + ' (id int, name text, x_intensity float, x_fwhm float, y_intesity float, y_fwhm float)')
         self.cur.execute('create table if not exists ' + int_table + ' (id int, name text, intensity float)')
+        self.cur.execute('create table if not exists ' + user_table + ' (id int, name text, email text, phone int)')
         self.con.commit()
         self.close_db()
 
@@ -45,10 +46,19 @@ class db_commands:
     #def init_tables(self):
         # init settings table
 
+    def insert_user(self, data):
+      if len(data) != 4:
+        print("ERROR: A row in settings has 4 columns, not " + str(len(data)) + "!")
+        return -1
+      self.load_db()
+      self.cur.execute("insert into " + user_table + " values(?,?,?)", data)
+      self.con.commit()
+      self.close_db()
+
     def insert_setting(self, data):
       if len(data) != 3:
         print("ERROR: A row in settings has 3 columns, not " + str(len(data)) + "!")
-        return
+        return -1
       self.load_db()
       self.cur.execute("insert into " + set_table + " values(?,?,?)", data)
       self.con.commit()
@@ -56,8 +66,8 @@ class db_commands:
 
     def insert_int_detector(self, data):
       if len(data) != 6:
-        print("ERROR: A row in settings has 3 columns, not " + str(len(data)) + "!")
-        return
+        print("ERROR: A row in settings has 6 columns, not " + str(len(data)) + "!")
+        return -1
       self.load_db()
       self.cur.execute("insert into " + int_table + " values(?,?,?)", data)
       self.con.commit()
@@ -66,7 +76,7 @@ class db_commands:
     def insert_pos_detector(self, data):
       if len(data) != 3:
         print("ERROR: A row in settings has 3 columns, not " + str(len(data)) + "!")
-        return
+        return -1
       self.load_db()
       self.cur.execute("insert into " + pos_table + " values(?,?,?)", data)
       self.con.commit()
