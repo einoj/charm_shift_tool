@@ -43,8 +43,6 @@ class db_commands:
     
     def close_db(self):
       self.con.close()
-    #def init_tables(self):
-        # init settings table
 
     def insert_user(self, data):
       if len(data) != 4:
