@@ -74,4 +74,4 @@ sec_msg = check_SEC()
 print(sec_msg)
 print("\n")
 
-alert("Warning", xmsg+ymsg+mwpc_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+#alert("Warning", xmsg+ymsg+mwpc_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
