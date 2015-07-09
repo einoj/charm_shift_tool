@@ -3,20 +3,20 @@
 - [ ] Setting for how much the intesity has to increase/decrease before a message is sent
 - [ ] Setting for how much the dose rate per hour has to change before a message is sent
 
-* TODO Message Contents [0/6]
+* TODO Message Contents [4/6]
 - [ ] How long has the beam been down
-- [ ] Mean of the BPM
-- [ ] Mean of the MWPC
-- [ ] FWHM of the BPM
-- [ ] FWHM of the MWPC
+- [X] Mean intensity of the BPM 
+- [X] Mean intensity of the MWPC
+- [X] FWHM of the BPM
+- [X] FWHM of the MWPC
 - [ ] Intensity of beam, from SEC 1
 
-* TODO Data retrival [5/7]
+* TODO Data retrival [6/8]
 - [X] Write code to download BPM data from https://ps-irrad.web.cern.ch/irrad/bpm.php
 - [X] Write regex to extract data from the html downloaded in the point above.
 - [X] Write a class for getting data from MWPC, can be based on adams code.
 - [X] Write a class for getting data from the SEC.
-- [ ] Implement the method for finding the fwhm of the MWPC that adam used, and compare it to the one currentyl in use
+- [X] Implement the method for finding the fwhm of the MWPC that adam used, and compare it to the one currentyl in use
 - [X] Fix the checking of the BPM using 3 indexes, also currently only checking the x-axis
 - [ ] Fix the check for SEC 1 as is currently saying there is no beam even when there is
 - [ ] Fix that the MWPC class crashes when there is no beam.
