@@ -2,7 +2,7 @@ from urllib import request
 import re
 import json
 from pprint import pprint
-#from scipy.optimize import curve_fit
+from scipy.optimize import curve_fit
 import numpy as np
 from archive.database_call_v0 import lgdb_tools
 from datetime import datetime, timedelta
@@ -120,6 +120,28 @@ class MWPC(Timber_detectors):
     except ZeroDivisionError:
       return 0.0
 
+  def gauss(self, x, A, mu, sigma):
+      p = -(x-mu)**2/(2.*sigma**2)
+      p = list(p) # need to convert to list in order for np.exp to work
+      return A*np.exp(p)
+
+  def gaussian_fit_test(self,x_data,y_data):
+      y_offset = np.min(y_data)
+      x = np.array(x_data)
+      y = np.array(y_data)-y_offset
+
+      x_fine = np.arange(-100, 100, 0.1)  # x array, with finer resolution
+      p = [1.0, 1.0, 75.0]             # initial fit params
+      coeff, pcov = curve_fit(self.gauss, x, y, p) # fit the params, get coeffs
+      y_fit = self.gauss(x_fine, *coeff)+y_offset                      # make a nice gaussian with fine x array
+
+      peak,     centre,     sigma     = coeff
+      peak_err, centre_err, sigma_err = np.sqrt(np.diag(pcov))
+
+      fwhm = 2.355*sigma
+      err_sigma  = (sigma_err/sigma)*100                    # std/sigma, % error for the FWHM value
+      return x_fine, y_fit, fwhm, err_sigma, centre, centre_err
+
   def get_data(self):
     n_spills = 10
     variable_name_h = 'MWPC.ZT8.135:PROFILE_H'
@@ -159,16 +181,14 @@ class MWPC(Timber_detectors):
     hx = ((np.array(hdata_s.index))*spacing)-(Lh/2.0)+(spacing/2)
     hy = hdata_s.values/n_spills
 
-    #fwhm_v = 2.355*np.std(vy)
-    #x_f, y_f, fwhm, err_sigma, centre, centre_err = self.gaussian_fit_test(vx, vy)
-    #fwhm_v = fwhm
+    x_f, y_f, fwhm, err_sigma, centre, centre_err = self.gaussian_fit_test(vx, vy)
+    fwhm_v = fwhm
 
-    fwhm_v = 2.355*self.sigma(vx,vy,self.integralMean(vx,vy))
-    fwhm_h = 2.355*self.sigma(hx,hy,self.integralMean(hx,hy))
+    #fwhm_v = 2.355*self.sigma(vx,vy,self.integralMean(vx,vy))
+    #fwhm_h = 2.355*self.sigma(hx,hy,self.integralMean(hx,hy))
 
-    #fwhm_h = 2.355*np.std(hy)
-    #x_f, y_f, fwhm, err_sigma, centre, centre_err = self.gaussian_fit_test(hx, hy)
-    #fwhm_h = fwhm
+    x_f, y_f, fwhm, err_sigma, centre, centre_err = self.gaussian_fit_test(hx, hy)
+    fwhm_h = fwhm
 
     v_intensity = vdata.ix[-1].max()
     h_intensity = hdata.ix[-1].max()
