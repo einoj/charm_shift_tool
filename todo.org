@@ -32,6 +32,7 @@
 - [X] Write functions for inserting data to tables
 - [ ] Write functions for changing values of settings and references
 - [ ] Create a table for storing user info.
+- [ ] Implement the __del__(self) function so that the database connection is closed when the python destructor is called on the object.
 
 * TODO Other [1/1]
 - [X] Ask Maurice Glaser how to obtain data from th BPM.
