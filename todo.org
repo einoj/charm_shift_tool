@@ -26,13 +26,13 @@
   As an example if the FHWM of BPM4 decreases to under 70% of the reference, send an email, but don't
   send a new email about it before after it has gone back to normal.
 
-* TODO Database for strong references and settings [3/5]
+* TODO Database for strong references and settings [5/6]
 - [X] Setup SQLITE3 database
 - [X] Write functions for opening and closing the database
 - [X] Write functions for inserting data to tables
 - [ ] Write functions for changing values of settings and references
-- [ ] Create a table for storing user info.
-- [ ] Implement the __del__(self) function so that the database connection is closed when the python destructor is called on the object.
+- [X] Create a table for storing user info.
+- [X] Implement the __del__(self) function so that the database connection is closed when the python destructor is called on the object.
 
 * TODO Other [1/1]
 - [X] Ask Maurice Glaser how to obtain data from th BPM.
