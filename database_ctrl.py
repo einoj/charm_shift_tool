@@ -32,6 +32,9 @@ class db_commands:
         self.cur.execute('create table if not exists ' + int_table + ' (id int, name text, intensity float)')
         self.con.commit()
         self.close_db()
+
+    def __del__(self):
+      self._db_connection.close()
         
     def load_db(self):
         self.con = sqlite3.connect(database)
