@@ -81,6 +81,8 @@ class BPM:
         for j in i['data']:
           int_arr.append(j[1])
         data['intensity'] = max(int_arr)
+        # find the index of the highest value to know where above the X-axis it is
+        data['centre'] = i['data'][int_arr.index(data['intensity'])][0]
         data_arr.append(data)
 
       return data_arr
@@ -183,17 +185,19 @@ class MWPC(Timber_detectors):
 
     x_f, y_f, fwhm, err_sigma, centre, centre_err = self.gaussian_fit_test(vx, vy)
     fwhm_v = fwhm
+    centre_v = centre
 
     #fwhm_v = 2.355*self.sigma(vx,vy,self.integralMean(vx,vy))
     #fwhm_h = 2.355*self.sigma(hx,hy,self.integralMean(hx,hy))
 
     x_f, y_f, fwhm, err_sigma, centre, centre_err = self.gaussian_fit_test(hx, hy)
     fwhm_h = fwhm
+    centre_h = centre
 
     v_intensity = vdata.ix[-1].max()
     h_intensity = hdata.ix[-1].max()
 
-    return v_intensity, h_intensity, fwhm_v, fwhm_h
+    return v_intensity, h_intensity, fwhm_v, fwhm_h, centre_v, centre_h
 
 class SEC(Timber_detectors):
   def __init__(self):
