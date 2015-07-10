@@ -1,8 +1,11 @@
 from data_retriver import BPM, MWPC, SEC
 from datetime import datetime, timedelta
+from database_ctrl import *
 from email_tools import alert
+import time
 
 deviation = .3
+tf = '%Y-%m-%d %H:%M:%S'
 calibration = {
     'SEC1': 2.2E7
 }
@@ -74,6 +77,7 @@ def check_SEC():
   data = s.get_data()
   reference = 3.5e11
   now = roundTime(datetime.now(), roundTo=60*60)
+  msg = ''
   try:
     intensity = (data['pot/spill'].mean())
     last_spill = data.index[-1]
@@ -82,26 +86,47 @@ def check_SEC():
     return warning
   if ((intensity > (1+deviation)*reference) or (intensity < (1-deviation)*reference)):
     msg =  'SEC1 intesity: ' + str(intensity) + ' reference: ' + str(intensity)
-  msg = ''
   return msg
 
-xmsg = ""
-ymsg = ""
-mwpc_msg = ""
-sec_msg = ""
-xmsg, ymsg, xcentre, xfwhm, xintensity, ycentre, yfwhm, yintensity = check_BPM()
-print(xmsg)
-print(ymsg)
-print("\n")
+def running():
+  while True:
+    xmsg = ""
+    ymsg = ""
+    mwpc_msg = ""
+    sec_msg = ""
+    warn_email = False
+    xmsg, ymsg, xcentre, xfwhm, xintensity, ycentre, yfwhm, yintensity = check_BPM()
+    print(xmsg)
+    print(ymsg)
+    print("\n")
 # Make sure the centre/fwhm is acutally off by also comparing to the SEC
-if (xfwhm or xcentre or ycentre or yfwhm):
-  mwpc_msg = check_MWPC()
-mwpc_msg = check_MWPC()
-print(mwpc_msg)
-print("\n")
-if (xintensity or yintensity):
-# Make sure  the intensity is acutally off by also comparing to the SEC
-  sec_msg = check_SEC()
-  if sec_msg != '':
-    alert("Warning", xmsg+ymsg+mwpc_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
-#alert("Warning", xmsg+ymsg+mwpc_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+    if (xfwhm or xcentre or ycentre or yfwhm):
+      mwpc_msg = check_MWPC()
+      if mwpc_msg != '':
+        warn_email = True
+    mwpc_msg = check_MWPC()
+    print(mwpc_msg)
+    print("\n")
+
+    #check only SEC for intensity
+    sec_msg = check_SEC()
+    print(sec_msg)
+    if sec_msg != '':
+      warn_email = True
+    dbc = db_commands()
+    last_msg = dbc.get_last_msg()
+    t_now = (datetime.now()).strftime(tf)
+    # Only send message if we haven't already
+    if last_msg[-1] == 1:
+      if warn_email:
+          alert("Warning CHARM beam down", xmsg+ymsg+mwpc_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+          dbc.insert_msg((t_now, xmsg+ymsg+mwpc_msg+sec_msg, 0))
+    elif last_msg[-1] == 0 and warn_email == False: 
+        # Beam is now up again
+        alert("Notice CHARM beam is up again", "Beam up again at " + t_now, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+        dbc.insert_msg((t_now, "Beam up again.", 1))
+    del dbc
+    time.sleep(300)
+
+if __name__ == "__main__":
+    running()

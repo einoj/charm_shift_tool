@@ -14,6 +14,8 @@ database  = 'charm_shift.db'
 set_table = 'settings'
 pos_table = 'BPMs_and_MWPC'
 int_table = 'Intensity_detectors'
+user_table = 'User_info'
+msg_table = 'messages'
 
 default_pos = []
 
@@ -30,12 +32,13 @@ class db_commands:
         self.cur.execute('create table if not exists ' + set_table + ' (id int, name text, setting int)')
         self.cur.execute('create table if not exists ' + pos_table + ' (id int, name text, x_intensity float, x_fwhm float, y_intesity float, y_fwhm float)')
         self.cur.execute('create table if not exists ' + int_table + ' (id int, name text, intensity float)')
-        self.cur.execute('create table if not exists ' + user_table + ' (id int, name text, email text, phone int)')
+        self.cur.execute('create table if not exists ' + user_table + ' (id integer priamry key, name text, email text, phone int)')
+        self.cur.execute('create table if not exists ' + msg_table + ' (id INTEGER PRIMARY KEY, time text, msg text, status int)')
         self.con.commit()
         self.close_db()
 
-    def __del__(self):
-      self._db_connection.close()
+    #def __del__(self):
+    #  self._db_connection.close()
         
     def load_db(self):
         self.con = sqlite3.connect(database)
@@ -80,9 +83,26 @@ class db_commands:
       self.con.commit()
       self.close_db()
 
+    def insert_msg(self, data):
+      if len(data) != 3:
+        print("ERROR: A row in settings has 2 columns, not " + str(len(data)) + "!")
+        return -1
+      self.load_db()
+      #data = [self.cur.lastrowid()+1]+data
+      self.cur.execute("insert into " + msg_table + "(time,msg,status)" " values(?,?,?)", data)
+      self.con.commit()
+      self.close_db()
+
+    def get_last_msg(self):
+      self.load_db()
+      self.cur.execute("select * from "+msg_table+" where id=(select max(id) from " + msg_table+")")
+      msg = self.cur.fetchone() 
+      return msg
+
+
     def print_tables(self):
       self.load_db()
-      self.cur.execute("select * from settings")
+      self.cur.execute("select * from messages")
       data = self.cur.fetchall()
       for d in data:
         print(d)
