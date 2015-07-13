@@ -3,16 +3,16 @@
 - [ ] Setting for how much the intesity has to increase/decrease before a message is sent
 - [ ] Setting for how much the dose rate per hour has to change before a message is sent
 
-* TODO Message Contents [5/7]
+* TODO Message Contents [6/7]
 - [ ] How long has the beam been down
 - [X] Mean intensity of the BPM 
 - [X] Mean intensity of the MWPC
 - [X] FWHM of the BPM
 - [X] FWHM of the MWPC
 - [X] Intensity of beam, from SEC 1
-- [ ] Check centering of the beam for BPM and MWPC
+- [X] Check centering of the beam for BPM and MWPC
 
-* TODO Data retrival [7/8]
+* TODO Data retrival [8/8]
 - [X] Write code to download BPM data from https://ps-irrad.web.cern.ch/irrad/bpm.php
 - [X] Write regex to extract data from the html downloaded in the point above.
 - [X] Write a class for getting data from MWPC, can be based on adams code.
@@ -20,12 +20,14 @@
 - [X] Implement the method for finding the fwhm of the MWPC that adam used, and compare it to the one currentyl in use
 - [X] Fix the checking of the BPM using 3 indexes, also currently only checking the x-axis
 - [X] Fix the check for SEC 1 as is currently saying there is no beam even when there is
-- [ ] Fix that the MWPC class crashes when there is no beam.
+- [X] Fix that the MWPC class crashes when there is no beam.
 
-* TODO Messaging [0/1]
-- [ ] Find a way to avoid sending an error message several times for discrepancies in the same varible.
+* TODO Messaging [1/2]
+- [X] Find a way to avoid sending an error message several times for discrepancies in the same varible.
   As an example if the FHWM of BPM4 decreases to under 70% of the reference, send an email, but don't
   send a new email about it before after it has gone back to normal.
+- [ ] Use a third number for the last column in the messages, to allow sending a beam down email after
+  a beam off centre email has been sent.
 
 * TODO Database for strong references and settings [5/6]
 - [X] Setup SQLITE3 database
