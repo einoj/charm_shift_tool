@@ -55,7 +55,7 @@ def check_MWPC():
   m = MWPC()
   ref_fv = 67
   ref_fh = 89
-  ref_cv = .6
+  ref_cv = 1.6
   ref_ch = 6.5
   msg = ""
   v_intensity, h_intensity, fwhm_v, fwhm_h, centre_v, centre_h = m.get_data()
