@@ -30,29 +30,26 @@ def bpm_msg(data, axis):
   # and the last index contains the most recent sampling
   check_centre = False
   check_fwhm = False
-  check_intensity = False
   msg = axis 
   for d in data:
-    for j in  ('intensity','fwhm'):
-      if ((d[-1][j] > (1+deviation)*d[0][j]) or (d[-1][j] < (1-deviation)*d[0][j])):
-        msg += 'Large deviation in the ' + j + ' of ' + str(d[-1]['title']) + '\n'
-        msg += ' reference ' + j + ' ' + str(d[0][j]) + '\n'
-        msg += ' current ' + j + ' ' + str(d[-1][j]) + '\n'
-        if (j == 'fwhm'):
-          check_fwhm = True
-        elif (j == 'intensity'):
-          check_intensity  = True
+    j = 'fwhm'
+    if ((d[-1][j] > (1+deviation)*d[0][j]) or (d[-1][j] < (1-deviation)*d[0][j])):
+      msg += 'Large deviation in the ' + j + ' of ' + str(d[-1]['title']) + '\n'
+      msg += ' reference ' + j + ' ' + str(d[0][j]) + '\n'
+      msg += ' current ' + j + ' ' + str(d[-1][j]) + '\n'
+      if (j == 'fwhm'):
+        check_fwhm = True
     if  abs(d[-1]['centre'])  >= 4.5:
         msg += 'Off centre: ' + str(d[-1]['centre']) + " of " + str(d[-1]['title']) + '\n'
         check_centre = True #reference with the mwpc
-  return msg, check_centre, check_fwhm, check_intensity
+  return msg, check_centre, check_fwhm
 
 def check_BPM():
   b = BPM()
   xdata, ydata, bpm_error = b.get_bpm_data()
-  xmsg, xcentre, xfwhm, xintensity = bpm_msg(xdata, 'x-axis\n')
-  ymsg, ycentre, yfwhm, yintensity = bpm_msg(ydata, 'y-axis\n')
-  return xmsg, ymsg, xcentre, xfwhm, xintensity, ycentre, yfwhm, yintensity, bpm_error
+  xmsg, xcentre, xfwhm = bpm_msg(xdata, 'x-axis\n')
+  ymsg, ycentre, yfwhm = bpm_msg(ydata, 'y-axis\n')
+  return xmsg, ymsg, xcentre, xfwhm, ycentre, yfwhm, bpm_error
 
 def check_MWPC():
   m = MWPC()
@@ -94,36 +91,46 @@ def running():
     ymsg = ""
     mwpc_msg = ""
     sec_msg = ""
+    subject = "Warning "
     warn_email = False
-    xmsg, ymsg, xcentre, xfwhm, xintensity, ycentre, yfwhm, yintensity, bpm_error = check_BPM()
+    xmsg, ymsg, xcentre, xfwhm, ycentre, yfwhm, bpm_error = check_BPM()
     print(xmsg)
     print(ymsg)
     print("\n")
-# Make sure the centre/fwhm is acutally off by also comparing to the SEC
-    if (xfwhm or xcentre or ycentre or yfwhm or bpm_error):
-      mwpc_msg = check_MWPC()
-      print(mwpc_msg)
-      print("\n")
-      if mwpc_msg != '':
-        warn_email = True
 
     #check only SEC for intensity
     sec_msg = check_SEC()
     print(sec_msg)
     if sec_msg != '':
       warn_email = True
+      subject += 'BEAM DOWN! '
+
+    # Make sure the centre/fwhm is acutally off by also comparing to the SEC
+    if (xfwhm or xcentre or ycentre or yfwhm or bpm_error):
+      mwpc_msg = check_MWPC()
+      print(mwpc_msg)
+      print("\n")
+      if mwpc_msg != '':
+        warn_email = True
+        subject += 'Beam off centre! '
+
     dbc = db_commands()
     last_msg = dbc.get_last_msg()
     t_now = (datetime.now()).strftime(tf)
     # Only send message if we haven't already
-    if last_msg[-1] == 1:
-      if warn_email:
-          alert("Warning CHARM beam down", xmsg+ymsg+mwpc_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
-          dbc.insert_msg((t_now, xmsg+ymsg+mwpc_msg+sec_msg, 0))
-    elif last_msg[-1] == 0 and warn_email == False: 
-        # Beam is now up again
-        alert("Notice CHARM beam is up again", "Beam up again at " + t_now, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
-        dbc.insert_msg((t_now, "Beam up again.", 1))
+    if last_msg is None:
+        if warn_email:
+            alert(subject, xmsg+ymsg+mwpc_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+            dbc.insert_msg((t_now, xmsg+ymsg+mwpc_msg+sec_msg, 0))
+    else:
+      if last_msg[-1] == 1:
+        if warn_email:
+            alert(subject, xmsg+ymsg+mwpc_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+            dbc.insert_msg((t_now, xmsg+ymsg+mwpc_msg+sec_msg, 0))
+      elif last_msg[-1] == 0 and warn_email == False: 
+          # Beam is now up again
+          alert("Notice CHARM beam is up again", "Beam up again at " + t_now, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+          dbc.insert_msg((t_now, "Beam up again.", 1))
     del dbc
     time.sleep(300)
 
