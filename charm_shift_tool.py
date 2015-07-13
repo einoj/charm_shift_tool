@@ -39,20 +39,20 @@ def bpm_msg(data, axis):
         msg += ' reference ' + j + ' ' + str(d[0][j]) + '\n'
         msg += ' current ' + j + ' ' + str(d[-1][j]) + '\n'
         if (j == 'fwhm'):
-          check_mwpc_fwhm = True
+          check_fwhm = True
         elif (j == 'intensity'):
-          check_sec_intensity  = True
+          check_intensity  = True
     if  abs(d[-1]['centre'])  >= 4.5:
-        msg += 'Off cenre: ' + str(d[-1]['centre']) + " of " + str(d[-1]['title']) + '\n'
-        check_mwpc_centre = True #reference with the mwpc
+        msg += 'Off centre: ' + str(d[-1]['centre']) + " of " + str(d[-1]['title']) + '\n'
+        check_centre = True #reference with the mwpc
   return msg, check_centre, check_fwhm, check_intensity
 
 def check_BPM():
   b = BPM()
-  xdata, ydata = b.get_bpm_data()
+  xdata, ydata, bpm_error = b.get_bpm_data()
   xmsg, xcentre, xfwhm, xintensity = bpm_msg(xdata, 'x-axis\n')
   ymsg, ycentre, yfwhm, yintensity = bpm_msg(ydata, 'y-axis\n')
-  return xmsg, ymsg, xcentre, xfwhm, xintensity, ycentre, yfwhm, yintensity
+  return xmsg, ymsg, xcentre, xfwhm, xintensity, ycentre, yfwhm, yintensity, bpm_error
 
 def check_MWPC():
   m = MWPC()
@@ -78,11 +78,11 @@ def check_SEC():
   reference = 3.5e11
   now = roundTime(datetime.now(), roundTo=60*60)
   msg = ''
+  warning = '{} - PROBLEM! NO BEAM!'.format(datetime.now())
   try:
     intensity = (data['pot/spill'].mean())
     last_spill = data.index[-1]
-    warning = '{} - PROBLEM! NO BEAM SINCE {}!'.format(datetime.now(), last_spill)
-  except IndexError:
+  except:
     return warning
   if ((intensity > (1+deviation)*reference) or (intensity < (1-deviation)*reference)):
     msg =  'SEC1 intesity: ' + str(intensity) + ' reference: ' + str(intensity)
@@ -95,18 +95,17 @@ def running():
     mwpc_msg = ""
     sec_msg = ""
     warn_email = False
-    xmsg, ymsg, xcentre, xfwhm, xintensity, ycentre, yfwhm, yintensity = check_BPM()
+    xmsg, ymsg, xcentre, xfwhm, xintensity, ycentre, yfwhm, yintensity, bpm_error = check_BPM()
     print(xmsg)
     print(ymsg)
     print("\n")
 # Make sure the centre/fwhm is acutally off by also comparing to the SEC
-    if (xfwhm or xcentre or ycentre or yfwhm):
+    if (xfwhm or xcentre or ycentre or yfwhm or bpm_error):
       mwpc_msg = check_MWPC()
+      print(mwpc_msg)
+      print("\n")
       if mwpc_msg != '':
         warn_email = True
-    mwpc_msg = check_MWPC()
-    print(mwpc_msg)
-    print("\n")
 
     #check only SEC for intensity
     sec_msg = check_SEC()

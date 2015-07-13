@@ -23,6 +23,7 @@ class Timber_detectors(object):
     return output
 
   def read_timber_data(self, filename, t_target, headers):
+      print (filename)
       filename = './data/{}.csv'.format(filename)
       df = pd.read_csv(filename, delimiter=',', names=headers, index_col=False, skiprows=8)
       df['Time [local]'] = pd.to_datetime(df['Time [local]'])
@@ -56,14 +57,17 @@ class BPM:
   # Returns dictionary that contains reference data aswell as the last 
   # 4 time stamped samplings
   def dl_bpm_data(self, url):
+    bpm_error = False
 
-    html = request.urlopen(url).read().decode("utf8")
+    try:
+      html = request.urlopen(url).read().decode("utf8")
+    except urllib.error.HTTPError:
+      bpm_error = True # error when retrieving bpm data, check the mwpc
     json_table = re.findall(r"startData = (.*);",html)[0]
     data_dict = json.loads(json_table)
 
-    return data_dict
+    return data_dict, bpm_error
 
-  #
   def extract_xy_data(self, data_dict):
       data_arr = []
       
@@ -93,10 +97,10 @@ class BPM:
     xdata = []
     ydata = []
     for i in range(1,5):
-      data = self.dl_bpm_data(bpm_url+str(i))
+      data, bpm_error = self.dl_bpm_data(bpm_url+str(i))
       xdata.append(self.extract_xy_data(data['X']))
       ydata.append(self.extract_xy_data(data['Y']))
-    return xdata, ydata
+    return xdata, ydata, bpm_error
   
 class MWPC(Timber_detectors):
 
@@ -128,20 +132,32 @@ class MWPC(Timber_detectors):
       return A*np.exp(p)
 
   def gaussian_fit_test(self,x_data,y_data):
+      mwpc_error = False
       y_offset = np.min(y_data)
       x = np.array(x_data)
       y = np.array(y_data)-y_offset
 
       x_fine = np.arange(-100, 100, 0.1)  # x array, with finer resolution
       p = [1.0, 1.0, 75.0]             # initial fit params
-      coeff, pcov = curve_fit(self.gauss, x, y, p) # fit the params, get coeffs
-      y_fit = self.gauss(x_fine, *coeff)+y_offset                      # make a nice gaussian with fine x array
 
-      peak,     centre,     sigma     = coeff
-      peak_err, centre_err, sigma_err = np.sqrt(np.diag(pcov))
+      # If the MWPC data is really bad, a curve can't be fit to it
+      # Alter the user
+      try:
+        coeff, pcov = curve_fit(self.gauss, x, y, p) # fit the params, get coeffs
+      except RuntimeError:
+        mwpc_error = True
 
-      fwhm = 2.355*sigma
-      err_sigma  = (sigma_err/sigma)*100                    # std/sigma, % error for the FWHM value
+      if not mwpc_error:
+        y_fit = self.gauss(x_fine, *coeff)+y_offset                      # make a nice gaussian with fine x array
+
+        peak,     centre,     sigma     = coeff
+        peak_err, centre_err, sigma_err = np.sqrt(np.diag(pcov))
+
+        fwhm = 2.355*sigma
+        err_sigma  = (sigma_err/sigma)*100                    # std/sigma, % error for the FWHM value
+      else:
+        x_fine = y_fit = fwhm = err_sigma = centre = centre_err = float('nan') 
+
       return x_fine, y_fit, fwhm, err_sigma, centre, centre_err
 
   def get_data(self):
@@ -200,10 +216,12 @@ class MWPC(Timber_detectors):
     return v_intensity, h_intensity, fwhm_v, fwhm_h, centre_v, centre_h
 
 class SEC(Timber_detectors):
+
   def __init__(self):
     self.calibration = {
         'SEC1': 2.2E7
     }
+
   def get_data(self):
     variable_name = 'MSC01.ZT8.107:COUNTS'
     filename = 'sec1_data'
@@ -212,6 +230,14 @@ class SEC(Timber_detectors):
     self.fetch_from_timber(variable_name, filename)
     t_now = (datetime.now()).strftime(tf)
     print (t_now)
-    data = self.read_timber_data(filename, t_now, headers)
-    data['pot/spill'] = data['Counts'].values*self.calibration['SEC1']
+    f = open('data/' + filename + '.CSV')
+    # Data from the SEC is not stored in timber if there is no beam.
+    # we must therefore check that there is actually data in the timber
+    # file we downloaded.
+    if sum(1 for line in f) > 7:
+      data = self.read_timber_data(filename, t_now, headers)
+      data['pot/spill'] = data['Counts'].values*self.calibration['SEC1']
+    else:
+    #This should probably be fixed by using a custom pandas DataFrame
+      data = t_now
     return data
