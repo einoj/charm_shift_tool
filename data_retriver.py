@@ -64,7 +64,11 @@ class BPM:
     except urllib.error.HTTPError:
       bpm_error = True # error when retrieving bpm data, check the mwpc
     json_table = re.findall(r"startData = (.*);",html)[0]
-    data_dict = json.loads(json_table)
+    try:
+      data_dict = json.loads(json_table)
+    except ValueError:
+      print("Value Error in BPM data_dict!")
+      bpm_error = True
 
     return data_dict, bpm_error
 
