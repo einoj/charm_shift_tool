@@ -3,7 +3,7 @@
 - [ ] Setting for how much the intesity has to increase/decrease before a message is sent
 - [ ] Setting for how much the dose rate per hour has to change before a message is sent
 
-* TODO Message Contents [6/7]
+* TODO Message Contents [6/8]
 - [ ] How long has the beam been down
 - [X] Mean intensity of the BPM 
 - [X] Mean intensity of the MWPC
@@ -11,6 +11,7 @@
 - [X] FWHM of the MWPC
 - [X] Intensity of beam, from SEC 1
 - [X] Check centering of the beam for BPM and MWPC
+- [ ] Should be checking beam intensity first, but it doesn't
 
 * TODO Data retrival [8/8]
 - [X] Write code to download BPM data from https://ps-irrad.web.cern.ch/irrad/bpm.php
