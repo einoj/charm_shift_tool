@@ -94,10 +94,6 @@ def running():
     sec_msg = ""
     subject = "Warning "
     warn_email = False
-    xmsg, ymsg, xcentre, xfwhm, ycentre, yfwhm, bpm_error = check_BPM()
-    print(xmsg)
-    print(ymsg)
-    print("\n")
 
     #check only SEC for intensity
     sec_msg = check_SEC()
@@ -105,6 +101,12 @@ def running():
     if sec_msg != '':
       warn_email = True
       subject += 'BEAM DOWN! '
+
+    xmsg, ymsg, xcentre, xfwhm, ycentre, yfwhm, bpm_error = check_BPM()
+    print(xmsg)
+    print(ymsg)
+    print("\n")
+
 
     # Make sure the centre/fwhm is acutally off by also comparing to the SEC
     if (xfwhm or xcentre or ycentre or yfwhm or bpm_error):
