@@ -122,6 +122,7 @@ class db_commands:
       self.cur.execute("delete from " + set_table)
       self.cur.execute("delete from " + pos_table)
       self.cur.execute("delete from " + int_table)
+      self.cur.execute("delete from " + msg_table)
       self.con.commit()
       self.close_db()
         

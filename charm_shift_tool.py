@@ -60,6 +60,7 @@ def check_MWPC():
   ref_ch = 6.5
   msg = ""
   fwhm_v, fwhm_h, centre_v, centre_h = m.get_data()
+  print ("MWPC: fwhm v: " + str(fwhm_v) + " fwhm_h: " + str(fwhm_h) + " centre_v: " + str(centre_v) + " centre_h: " + str(centre_h))
   if abs(centre_v) > (1+deviation)*ref_cv:
     msg += "MWPC vertical center offset: " + str(centre_v) + " mm\n"
   if abs(centre_h) > (1+deviation)*ref_ch:
@@ -80,6 +81,7 @@ def check_SEC():
   try:
     intensity = (data['pot/spill'].mean())
     last_spill = data.index[-1]
+    print ("SEC intensity: " + str(intensity))
   except:
     return warning
   if ((intensity > (1+deviation)*reference) or (intensity < (1-deviation)*reference)):
@@ -135,7 +137,7 @@ def running():
           alert("Notice CHARM beam is up again", "Beam up again at " + t_now, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
           dbc.insert_msg((t_now, "Beam up again.", 1))
     del dbc
-    time.sleep(300)
+    time.sleep(600)
 
 if __name__ == "__main__":
     running()

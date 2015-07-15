@@ -5,6 +5,10 @@
 - [ ] Update text view with last two messages
 - [ ] Connect the GUI to the rest of the program
 - [ ] Load data base settings on startup
+- [ ] Option to set when a day starts and ends, for example 1400 to 0200
+- [ ] The timbre data is updated every 10 minutes.
+- [ ] option for maximum number of sms sent.
+- [ ] The program should keep sending notifications until the user accepts the reply
 
 * TODO Message Contents [6/8]
 - [ ] How long has the beam been down
@@ -45,7 +49,8 @@
 - [X] Ask Maurice Glaser how to obtain data from th BPM.
   Email sent, waiting for reply. 2015-07-03 Fri 10:23.
   Wrote function for extracting the data from https://ps-irrad.web.cern.ch/irrad/bpm.php, making this unnesseary.
-
+- [ ] Cross check with spills per cycle
+  
 * Notes
 - Intensity can be gathered from SEC 1
 - The BPM and MWPC show beam profile with mean and FWHM

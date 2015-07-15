@@ -23,6 +23,9 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="maximum">
+     <number>120</number>
+    </property>
    </widget>
    <widget class="QSpinBox" name="deviationBox">
     <property name="geometry">
@@ -32,6 +35,9 @@
       <width>181</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="maximum">
+     <number>999</number>
     </property>
    </widget>
    <widget class="QSpinBox" name="secRefBox">
@@ -43,6 +49,9 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="maximum">
+     <number>999</number>
+    </property>
    </widget>
    <widget class="QSpinBox" name="mwpcVFwhmRefBox">
     <property name="geometry">
@@ -52,6 +61,9 @@
       <width>181</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="maximum">
+     <number>999</number>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -90,7 +102,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>SEC reference [e11]</string>
+     <string>SEC reference [e10]</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
@@ -115,6 +127,9 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="maximum">
+     <number>999</number>
+    </property>
    </widget>
    <widget class="QSpinBox" name="mwpcHFwhmRefBox">
     <property name="geometry">
@@ -125,6 +140,9 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="maximum">
+     <number>999</number>
+    </property>
    </widget>
    <widget class="QSpinBox" name="mwpcHCentreRefBox">
     <property name="geometry">
@@ -134,6 +152,9 @@
       <width>181</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="maximum">
+     <number>999</number>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
@@ -146,7 +167,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>MWPC vertical Centre reference [mm]</string>
+     <string>MWPC vertical Centre reference [e-1 mm]</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
@@ -172,7 +193,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>MWPC horizontal Centre  reference [mm]</string>
+     <string>MWPC horizontal Centre  reference [e-1 mm]</string>
     </property>
    </widget>
    <widget class="QPlainTextEdit" name="plainTextEdit">
@@ -183,6 +204,12 @@
       <width>361</width>
       <height>701</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="plainText">
      <string>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit. Donec et mollis dolor. Praesent et diam eget libero egestas mattis sit amet vitae augue. Nam tincidunt congue enim, ut porta lorem lacinia consectetur. Donec ut libero sed arcu vehicula ultricies a non tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ut gravida lorem. Ut turpis felis, pulvinar a semper sed, adipiscing id dolor. Pellentesque auctor nisi id magna consequat sagittis. Curabitur dapibus enim sit amet elit pharetra tincidunt feugiat nisl imperdiet. Ut convallis libero in urna ultrices accumsan. Donec sed odio eros. Donec viverra mi quis quam pulvinar at malesuada arcu rhoncus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In rutrum accumsan ultricies. Mauris vitae nisi at sem facilisis semper ac in est.
@@ -195,6 +222,19 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
     </property>
     <property name="textInteractionFlags">
      <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>350</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Load Defaults</string>
     </property>
    </widget>
   </widget>
@@ -232,7 +272,7 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
    <sender>secRefBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>MainWindow</receiver>
-   <slot>secRef_changed()</slot>
+   <slot>sec_ref_changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>449</x>
@@ -248,7 +288,7 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
    <sender>mwpcVFwhmRefBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>MainWindow</receiver>
-   <slot>mwpcVFwhm_changed()</slot>
+   <slot>mwpc_V_FWHM_changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>450</x>
@@ -264,7 +304,7 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
    <sender>mwpcVCentreRefBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>MainWindow</receiver>
-   <slot>mwpcVCentre_changed()</slot>
+   <slot>mwpc_V_centre_changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>416</x>
@@ -280,7 +320,7 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
    <sender>mwpcHFwhmRefBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>MainWindow</receiver>
-   <slot>mwpcHFwhm_changed()</slot>
+   <slot>mwpc_H_FWHM_changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>428</x>
@@ -296,7 +336,7 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
    <sender>mwpcHCentreRefBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>MainWindow</receiver>
-   <slot>mwpcHCentre_changed()</slot>
+   <slot>mwpc_H_centre_changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>446</x>
@@ -324,14 +364,63 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>load_defaults()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>83</x>
+     <y>384</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>88</x>
+     <y>422</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>mwpcHCentreRefBox</receiver>
+   <slot>update()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>95</x>
+     <y>392</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>349</x>
+     <y>355</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>mwpcHFwhmRefBox</receiver>
+   <slot>update()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>107</x>
+     <y>389</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>343</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>deviation_changed()</slot>
   <slot>downtime_changed()</slot>
-  <slot>secRef_changed()</slot>
-  <slot>mwpcVFwhm_changed()</slot>
-  <slot>mwpcVCentre_changed()</slot>
-  <slot>mwpcHFwhm_changed()</slot>
-  <slot>mwpcHCentre_changed()</slot>
+  <slot>mwpc_V_centre_changed()</slot>
+  <slot>mwpc_H_centre_changed()</slot>
+  <slot>load_defaults()</slot>
+  <slot>sec_ref_changed()</slot>
+  <slot>mwpc_V_FWHM_changed()</slot>
+  <slot>mwpc_H_FWHM_changed()</slot>
  </slots>
 </ui>
