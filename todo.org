@@ -1,7 +1,9 @@
-* TODO User interface [0/3]
-- [ ] Setting for amount of time the beam is down before a message is sent
-- [ ] Setting for how much the intesity has to increase/decrease before a message is sent
-- [ ] Setting for how much the dose rate per hour has to change before a message is sent
+* TODO User interface [3/3]
+- [X] Setting for amount of time the beam is down before a message is sent
+- [X] Setting for how much the intesity has to increase/decrease before a message is sent
+- [X] Setting for how much the dose rate per hour has to change before a message is sent
+- [ ] Update text view with last two messages
+- [ ] Connect the GUI to the rest of the program
 
 * TODO Message Contents [6/8]
 - [ ] How long has the beam been down
