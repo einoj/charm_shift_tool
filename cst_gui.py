@@ -11,11 +11,16 @@ class Window(QMainWindow, Ui_MainWindow):
 
     self.setupUi(self)
 
+  def updateMsg(self, msg):
+    _translate = QCoreApplication.translate
+    self.plainTextEdit.setPlainText(_translate("MainWindow", msg))
+
 if __name__ == '__main__':
   cst = QApplication(sys.argv)
   window = Window()
 
   window.show()
+  window.updateMsg("Hallo")
   #appLabel = QQuickView()
   #appLabel.setSource(QUrl('cst.qml'))
 

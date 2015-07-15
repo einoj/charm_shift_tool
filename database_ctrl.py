@@ -29,7 +29,7 @@ class db_commands:
         '''
         self.load_db()
         # Make sure that tables exist
-        self.cur.execute('create table if not exists ' + set_table + ' (id int, name text, setting int)')
+        self.cur.execute('create table if not exists ' + set_table + ' (id INTEGER PRIMARY KEY, name text, setting int)')
         self.cur.execute('create table if not exists ' + pos_table + ' (id int, name text, x_intensity float, x_fwhm float, y_intesity float, y_fwhm float)')
         self.cur.execute('create table if not exists ' + int_table + ' (id int, name text, intensity float)')
         self.cur.execute('create table if not exists ' + user_table + ' (id integer priamry key, name text, email text, phone int)')
@@ -57,11 +57,20 @@ class db_commands:
       self.close_db()
 
     def insert_setting(self, data):
-      if len(data) != 3:
+      if len(data) != 2:
         print("ERROR: A row in settings has 3 columns, not " + str(len(data)) + "!")
         return -1
       self.load_db()
-      self.cur.execute("insert into " + set_table + " values(?,?,?)", data)
+      # Insert new setting if one with the same name does not exist
+      # else update the setting
+      # I am unsure if this is the best way of doing it 
+      # Using insert or ingore might be a better method
+      self.cur.execute("select rowid from settings where name = ?",(data[0],))
+      row = self.cur.fetchone()
+      if row is None:
+        self.cur.execute("insert into " + set_table + "(name, setting)" " values(?,?)", data)
+      else:
+        self.cur.execute("update settings set setting=? where name=?",(data[1],data[0]))
       self.con.commit()
       self.close_db()
 
