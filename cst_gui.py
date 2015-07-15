@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from cst import Ui_MainWindow
 
-class Window(QMainWindow, Ui_MainWindow):
+class GUI(QMainWindow, Ui_MainWindow):
   def __init__(self, parent = None):
 
     QMainWindow.__init__(self, parent)
@@ -17,7 +17,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 if __name__ == '__main__':
   cst = QApplication(sys.argv)
-  window = Window()
+  window = GUI()
 
   window.show()
   window.updateMsg("Hallo")
