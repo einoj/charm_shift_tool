@@ -25,7 +25,10 @@ class Timber_detectors(object):
   def read_timber_data(self, filename, t_target, headers):
       print (filename)
       filename = './data/{}.csv'.format(filename)
-      df = pd.read_csv(filename, delimiter=',', names=headers, index_col=False, skiprows=8)
+      try:
+        df = pd.read_csv(filename, delimiter=',', names=headers, index_col=False, skiprows=8)
+      except:
+        return pd.DataFrame()
       df['Time [local]'] = pd.to_datetime(df['Time [local]'])
       df = df.set_index('Time [local]')
       return df
@@ -179,6 +182,11 @@ class MWPC(Timber_detectors):
     vdata = self.read_timber_data(filename_v, t_now, headers) 
     hdata = self.read_timber_data(filename_h, t_now, headers) 
 
+    if (vdata.empty or hdata.empty):
+        # An error occured in fetching mwpc data
+        # returning infinity will cause an alert to be sent
+        return float("inf"),float("inf"),float("inf"),float("inf")
+
     vdata = vdata[:t_now][-n_spills:]
     hdata = hdata[:t_now][-n_spills:]
 
@@ -207,17 +215,14 @@ class MWPC(Timber_detectors):
     fwhm_v = fwhm
     centre_v = centre
 
-    #fwhm_v = 2.355*self.sigma(vx,vy,self.integralMean(vx,vy))
-    #fwhm_h = 2.355*self.sigma(hx,hy,self.integralMean(hx,hy))
-
     x_f, y_f, fwhm, err_sigma, centre, centre_err = self.gaussian_fit_test(hx, hy)
     fwhm_h = fwhm
     centre_h = centre
 
-    v_intensity = vdata.ix[-1].max()
-    h_intensity = hdata.ix[-1].max()
+    #v_intensity = vdata.ix[-1].max()
+    #h_intensity = hdata.ix[-1].max()
 
-    return v_intensity, h_intensity, fwhm_v, fwhm_h, centre_v, centre_h
+    return fwhm_v, fwhm_h, centre_v, centre_h
 
 class SEC(Timber_detectors):
 

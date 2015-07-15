@@ -59,7 +59,7 @@ def check_MWPC():
   ref_cv = 1.6
   ref_ch = 6.5
   msg = ""
-  v_intensity, h_intensity, fwhm_v, fwhm_h, centre_v, centre_h = m.get_data()
+  fwhm_v, fwhm_h, centre_v, centre_h = m.get_data()
   if abs(centre_v) > (1+deviation)*ref_cv:
     msg += "MWPC vertical center offset: " + str(centre_v) + " mm\n"
   if abs(centre_h) > (1+deviation)*ref_ch:
