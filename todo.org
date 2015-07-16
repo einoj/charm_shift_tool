@@ -45,7 +45,7 @@
 - [X] Create a table for storing user info.
 - [X] Implement the __del__(self) function so that the database connection is closed when the python destructor is called on the object.
 
-* TODO Other [1/2]
+* TODO Other [1/3]
 - [X] Ask Maurice Glaser how to obtain data from th BPM.
   Email sent, waiting for reply. 2015-07-03 Fri 10:23.
   Wrote function for extracting the data from https://ps-irrad.web.cern.ch/irrad/bpm.php, making this unnesseary.
@@ -58,6 +58,9 @@
   The reference energy would have to be adjusted accordingly. The second more serious isssue is that if the beam goes down, and there has not
   been any samples for the last > 15 min, an alert will not be sent because the average intensity is still high enough. To fix this
   it should be checked that there has been at least 8 samples in the last 10 minutes.
+  It took an hour after the beam went down for the average to go low enough.
+  If we just use fifteen samples the average count should be around 240000, and even if two of the last fifeen samples are 0
+  the average will not drop lower than 70% of 240000. This should be a setting in the 
   
 * Notes
 - Intensity can be gathered from SEC 1
