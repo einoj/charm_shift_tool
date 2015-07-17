@@ -6,7 +6,6 @@ from database_ctrl import db_commands
 import time
 import urllib
 
-deviation = .3
 tf = '%Y-%m-%d %H:%M:%S'
 calibration = {
     'SEC1': 2.2E7
@@ -30,6 +29,9 @@ def bpm_msg(data, axis):
   # BPMs are numbered 1 through 4
   # index 0 contains refrence data,
   # and the last index contains the most recent sampling
+  db_cmd = db_commands()
+  deviation = db_cmd.get_setting('deviation')
+  del db_cmd
   check_centre = False
   check_fwhm = False
   msg = axis 
@@ -55,11 +57,13 @@ def check_BPM():
 
 def check_MWPC():
   db_cmd = db_commands()
+  ref_fv = db_cmd.get_setting('mwpc_V_FWHM')
+  ref_fh = db_cmd.get_setting('mwpc_H_FWHM')
+  ref_cv = db_cmd.get_setting('mwpc_V_center')
+  ref_ch = db_cmd.get_setting('mwpc_H_centre')
+  deviation = db_cmd.get_setting('deviation')
+  del db_cmd
   m = MWPC()
-  ref_fv = 67
-  ref_fh = 89
-  ref_cv = 1.6
-  ref_ch = 6.5
   msg = ""
   fwhm_v, fwhm_h, centre_v, centre_h = m.get_data()
   print ("MWPC: fwhm v: " + str(fwhm_v) + " fwhm_h: " + str(fwhm_h) + " centre_v: " + str(centre_v) + " centre_h: " + str(centre_h))
@@ -74,6 +78,9 @@ def check_MWPC():
   return msg
 
 def check_SEC():
+  db_cmd = db_commands()
+  deviation = db_cmd.get_setting('deviation')
+  del db_cmd
   s = SEC()
   data = s.get_data()
   reference = 3.5e11
