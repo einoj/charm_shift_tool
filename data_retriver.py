@@ -18,7 +18,7 @@ def fwhm(sigma):
 class Timber_detectors(object):
   def fetch_from_timber(self, variable_name, filename, deltahours):
     a = lgdb_tools()
-    t1 = (datetime.now()-timedelta(deltahours)).strftime(tf)
+    t1 = (datetime.now()-timedelta(hours=deltahours)).strftime(tf)
     t_now = (datetime.now()).strftime(tf)
     output = a.get_data(variable_name, t1, t_now, filename)
     return output

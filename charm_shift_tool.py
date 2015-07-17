@@ -30,7 +30,8 @@ def bpm_msg(data, axis):
   # index 0 contains refrence data,
   # and the last index contains the most recent sampling
   db_cmd = db_commands()
-  deviation = db_cmd.get_setting('deviation')
+  # divide by 100 because the database stores % not floats between 0 and 1
+  deviation = db_cmd.get_setting('deviation')/100.
   del db_cmd
   check_centre = False
   check_fwhm = False
@@ -61,7 +62,7 @@ def check_MWPC():
   ref_fh = db_cmd.get_setting('mwpc_H_FWHM')
   ref_cv = db_cmd.get_setting('mwpc_V_center')
   ref_ch = db_cmd.get_setting('mwpc_H_centre')
-  deviation = db_cmd.get_setting('deviation')
+  deviation = db_cmd.get_setting('deviation')/100.
   del db_cmd
   m = MWPC()
   msg = ""
@@ -79,7 +80,7 @@ def check_MWPC():
 
 def check_SEC():
   db_cmd = db_commands()
-  deviation = db_cmd.get_setting('deviation')
+  deviation = db_cmd.get_setting('deviation')/100.
   del db_cmd
   s = SEC()
   data = s.get_data()
