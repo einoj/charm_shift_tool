@@ -6,11 +6,10 @@
 - [ ] Connect the GUI to the rest of the program
 - [ ] Load data base settings on startup
 - [ ] Option to set when a day starts and ends, for example 1400 to 0200
-- [ ] The timbre data is updated every 10 minutes.
 - [ ] option for maximum number of sms sent.
 - [ ] The program should keep sending notifications until the user accepts the reply
 
-* TODO Message Contents [6/8]
+* TODO Message Contents [7/8]
 - [ ] How long has the beam been down
 - [X] Mean intensity of the BPM 
 - [X] Mean intensity of the MWPC
@@ -18,7 +17,7 @@
 - [X] FWHM of the MWPC
 - [X] Intensity of beam, from SEC 1
 - [X] Check centering of the beam for BPM and MWPC
-- [ ] Should be checking beam intensity first, but it doesn't
+- [X] Should be checking beam intensity first, but it doesn't
 
 * TODO Data retrival [8/8]
 - [X] Write code to download BPM data from https://ps-irrad.web.cern.ch/irrad/bpm.php
@@ -37,11 +36,11 @@
 - [ ] Use a third number for the last column in the messages, to allow sending a beam down email after
   a beam off centre email has been sent.
 
-* TODO Database for strong references and settings [5/6]
+* TODO Database for strong references and settings [6/6]
 - [X] Setup SQLITE3 database
 - [X] Write functions for opening and closing the database
 - [X] Write functions for inserting data to tables
-- [ ] Write functions for changing values of settings and references
+- [X] Write functions for changing values of settings and references
 - [X] Create a table for storing user info.
 - [X] Implement the __del__(self) function so that the database connection is closed when the python destructor is called on the object.
 
@@ -69,3 +68,4 @@
 - Check data every 10 minutes.
 - In order to know how long the beam has been down, store the time that downtime was
   detected
+- The timbre data is updated every 10 minutes.
