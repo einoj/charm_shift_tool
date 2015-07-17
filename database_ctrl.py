@@ -77,7 +77,7 @@ class db_commands:
       self.load_db()
       self.cur.execute("select * from settings where name='"+settingname+"'")
       setting = self.cur.fetchone()
-      setting = setting[1]
+      setting = int(setting[1])
       return setting
 
     def insert_msg(self, data):
