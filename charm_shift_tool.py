@@ -2,6 +2,7 @@ from data_retriver import BPM, MWPC, SEC
 from datetime import datetime, timedelta
 from database_ctrl import *
 from email_tools import alert
+from database_ctrl import db_commands
 import time
 import urllib
 
@@ -53,6 +54,7 @@ def check_BPM():
   return xmsg, ymsg, xcentre, xfwhm, ycentre, yfwhm, bpm_error
 
 def check_MWPC():
+  db_cmd = db_commands()
   m = MWPC()
   ref_fv = 67
   ref_fh = 89
@@ -89,6 +91,7 @@ def check_SEC():
   return msg
 
 def running():
+
   while True:
     xmsg = ""
     ymsg = ""
