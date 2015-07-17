@@ -35,7 +35,7 @@ def bpm_msg(data, axis):
   del db_cmd
   check_centre = False
   check_fwhm = False
-  msg = axis 
+  msg = ""
   for d in data:
     j = 'fwhm'
     if ((d[-1][j] > (1+deviation)*d[0][j]) or (d[-1][j] < (1-deviation)*d[0][j])):
@@ -110,22 +110,15 @@ def running():
 
     #check only SEC for intensity
     sec_msg = check_SEC()
-    print(sec_msg)
     if sec_msg != '':
       warn_email = True
       subject += 'BEAM DOWN! '
 
     xmsg, ymsg, xcentre, xfwhm, ycentre, yfwhm, bpm_error = check_BPM()
-    print(xmsg)
-    print(ymsg)
-    print("\n")
-
 
     # Make sure the centre/fwhm is acutally off by also comparing to the SEC
     if (xfwhm or xcentre or ycentre or yfwhm or bpm_error):
       mwpc_msg = check_MWPC()
-      print(mwpc_msg)
-      print("\n")
       if mwpc_msg != '':
         warn_email = True
         subject += 'Beam off centre! '
@@ -134,6 +127,9 @@ def running():
     last_msg = dbc.get_last_msg()
     t_now = (datetime.now()).strftime(tf)
     # Only send message if we haven't already
+    whole_msg = 'SEC INFO\n----------------------------------------\n\n'+sec_msg+'\n\nBPM INFO\n----------------------------------------\n\nX-AXIS\n\n'\
+    + xmsg + '\nY-AXIS\n\n' + ymsg + '\n\nMWPC INFO\n----------------------------------------\n\n'+mwpc_msg
+
     if last_msg is None:
         if warn_email:
             alert(subject, xmsg+ymsg+mwpc_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
@@ -148,6 +144,7 @@ def running():
           alert("Notice CHARM beam is up again", "Beam up again at " + t_now, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
           dbc.insert_msg((t_now, "Beam up again.", 1))
     del dbc
+    print(whole_msg)
     time.sleep(600)
 
 if __name__ == "__main__":
