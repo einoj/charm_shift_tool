@@ -28,6 +28,7 @@
 - [X] Fix the checking of the BPM using 3 indexes, also currently only checking the x-axis
 - [X] Fix the check for SEC 1 as is currently saying there is no beam even when there is
 - [X] Fix that the MWPC class crashes when there is no beam.
+- [ ] Instead of just looking at the maximum BPM value, look at the maximum of the gaussian fit to avoid errors with max peaks outside the gaussian peak.
 
 * TODO Messaging [1/2]
 - [X] Find a way to avoid sending an error message several times for discrepancies in the same varible.
