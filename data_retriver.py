@@ -65,9 +65,9 @@ class BPM:
 
     try:
       html = request.urlopen(url).read().decode("utf8")
+      json_table = re.findall(r"startData = (.*);",html)[0]
     except:
       bpm_error = True # error when retrieving bpm data, check the mwpc
-    json_table = re.findall(r"startData = (.*);",html)[0]
     try:
       data_dict = json.loads(json_table)
     except ValueError:
