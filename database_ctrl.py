@@ -10,7 +10,7 @@
 
 import sqlite3
 
-database  = 'charm_shift.db'
+database  = '//cern.ch/dfs/Websites/t/test-charmShiftTool/data/charm_shift.db'
 set_table = 'settings'
 user_table = 'User_info'
 msg_table = 'messages'
@@ -94,7 +94,7 @@ class db_commands:
       self.load_db()
       self.cur.execute("select * from "+msg_table+" where id=(select max(id) from " + msg_table+")")
       msg = self.cur.fetchone() 
-      return msg[2]
+      return msg
 
     def get_beam_status(self):
       self.load_db()
