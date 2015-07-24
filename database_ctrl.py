@@ -14,6 +14,8 @@ database  = '//cern.ch/dfs/Websites/t/test-charmShiftTool/data/charm_shift.db'
 set_table = 'settings'
 user_table = 'User_info'
 msg_table = 'messages'
+#status_table 'status'
+response_table = 'response'
 
 default_pos = []
 
@@ -28,8 +30,10 @@ class db_commands:
         self.load_db()
         # Make sure that tables exist
         self.cur.execute('create table if not exists ' + set_table + ' (id INTEGER PRIMARY KEY, name text, setting int)')
-        self.cur.execute('create table if not exists ' + user_table + ' (id integer priamry key, name text, email text, phone int)')
+        self.cur.execute('create table if not exists ' + user_table + ' (id INTEGER PRIMARY KEY, name text, email text, phone int)')
         self.cur.execute('create table if not exists ' + msg_table + ' (id INTEGER PRIMARY KEY, time text, msg text, status int)')
+        #self.cur.execute('create table if not exists ' + status_table + ' (id INTEGER PRIMARY KEY, text, msg text, status int)')
+        self.cur.execute('create table if not exists ' + response_table + ' (id INTEGER PRIMARY KEY, name text, status int)')
         self.con.commit()
         self.close_db()
 
@@ -110,6 +114,21 @@ class db_commands:
       msg = self.cur.fetchone() 
       beam = msg[3]
       return beam 
+
+    def respond(self, item, x):
+      if type(item) != str or type(x) != int:
+        print("ERROR: first argument must be a string and second argument an int")
+        return -1
+      self.load_db()
+      self.cur.execute("select rowid from "+response_table+"where name = " + item)
+      data = (item,x)
+      row = self.cur.fetchone()
+      if row is None:
+        self.cur.execute("insert into " + response_table + "(name, status)" " values(?,?)", data)
+      else:
+        self.cur.execute("update "+response_table+" set status=? where name=?",(x,item))
+      self.con.commit()
+      self.close_db()
 
     def print_tables(self):
       self.load_db()

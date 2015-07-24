@@ -30,12 +30,15 @@
 - [X] Fix that the MWPC class crashes when there is no beam.
 - [ ] Instead of just looking at the maximum BPM value, look at the maximum of the gaussian fit to avoid errors with max peaks outside the gaussian peak.
 
-* TODO Messaging [1/2]
+* TODO Messaging [1/4]
 - [X] Find a way to avoid sending an error message several times for discrepancies in the same varible.
   As an example if the FHWM of BPM4 decreases to under 70% of the reference, send an email, but don't
   send a new email about it before after it has gone back to normal.
 - [ ] Use a third number for the last column in the messages, to allow sending a beam down email after
   a beam off centre email has been sent.
+- There is a response table in the database. it has three rows, beam, fwhm, and centre.
+- [ ] Set them to 0 when their respective statuses goes down, for example if the intensity is too low, set beam to 0.
+- [ ] Then set them to 1 after a user responds.
 
 * TODO Database for strong references and settings [6/6]
 - [X] Setup SQLITE3 database
