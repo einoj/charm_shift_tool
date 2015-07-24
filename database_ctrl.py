@@ -94,6 +94,14 @@ class db_commands:
       self.load_db()
       self.cur.execute("select * from "+msg_table+" where id=(select max(id) from " + msg_table+")")
       msg = self.cur.fetchone() 
+      self.close_db()
+      return msg
+
+    def get_last_x_msgs(self, x):
+      self.load_db()
+      self.cur.execute("select * from "+msg_table+" order by id DESC limit " + str(x))
+      msg = self.cur.fetchall() 
+      self.close_db()
       return msg
 
     def get_beam_status(self):
