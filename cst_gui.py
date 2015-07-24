@@ -24,7 +24,7 @@ if __name__ == '__main__':
   db_cmd = db_commands()
   msg = db_cmd.get_last_msg()
   print(msg)
-  window.update_msg(msg[2])
+  window.update_msg(msg)
   #appLabel = QQuickView()
   #appLabel.setSource(QUrl('cst.qml'))
 

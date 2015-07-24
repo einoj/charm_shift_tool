@@ -19,12 +19,14 @@ class Timber_detectors(object):
   def fetch_from_timber(self, variable_name, filename, deltahours):
     a = lgdb_tools()
     t1 = (datetime.now()-timedelta(hours=deltahours)).strftime(tf)
+    print(t1)
     t_now = (datetime.now()).strftime(tf)
     output = a.get_data(variable_name, t1, t_now, filename)
     return output
 
   def read_timber_data(self, filename, t_target, headers):
       print (filename)
+      sucess = False
       filename = './data/{}.csv'.format(filename)
       try:
         df = pd.read_csv(filename, delimiter=',', names=headers, index_col=False, skiprows=8)
@@ -32,6 +34,7 @@ class Timber_detectors(object):
         return pd.DataFrame()
       df['Time [local]'] = pd.to_datetime(df['Time [local]'])
       df = df.set_index('Time [local]')
+      sucess = True
       return df
 
 class BPM:
@@ -248,7 +251,10 @@ class SEC(Timber_detectors):
     # file we downloaded.
     if sum(1 for line in f) > 7:
       data = self.read_timber_data(filename, t_now, headers)
-      data['pot/spill'] = data['Counts'].values*self.calibration['SEC1']
+      if not data.empty: 
+        data['pot/spill'] = data['Counts'].values*self.calibration['SEC1']
+      else:
+        data = t_now # no SEC data
     else:
     #This should probably be fixed by using a custom pandas DataFrame
       data = t_now

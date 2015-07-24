@@ -94,7 +94,14 @@ class db_commands:
       self.load_db()
       self.cur.execute("select * from "+msg_table+" where id=(select max(id) from " + msg_table+")")
       msg = self.cur.fetchone() 
-      return msg
+      return msg[2]
+
+    def get_beam_status(self):
+      self.load_db()
+      self.cur.execute("select * from "+msg_table+" where id=(select max(id) from " + msg_table+")")
+      msg = self.cur.fetchone() 
+      beam = msg[3]
+      return beam 
 
     def print_tables(self):
       self.load_db()

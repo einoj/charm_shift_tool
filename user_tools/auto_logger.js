@@ -1,6 +1,6 @@
 var page = require('webpage').create(), loadInProgress = false, fs = require('fs');
-var htmlFiles = ['http://ps-irrad.web.cern.ch/irrad/intensityAll.php','http://ps-irrad.web.cern.ch/irrad/bpm.php?bpmid=BPM_01'];
-var images = ['bpm_all.png', 'bpm1.png'];
+var htmlFiles = ['http://ps-irrad.web.cern.ch/irrad/intensityAll.php','http://ps-irrad.web.cern.ch/irrad/bpm.php?bpmid=BPM_01','http://thornton.web.cern.ch/charm_mwpc.html','https://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr=CPS'];
+var images = ['bpm_all', 'bpm1', 'mwpc', 'op'];
  
 console.log('Number of Html Files: ' + htmlFiles.length);
 var width = 1920;
