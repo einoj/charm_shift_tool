@@ -65,18 +65,19 @@ def check_MWPC():
   deviation = db_cmd.get_setting('deviation')/100.
   del db_cmd
   m = MWPC()
-  msg = ""
+  fwhm_msg = ""
+  centre_msg = ""
   fwhm_v, fwhm_h, centre_v, centre_h = m.get_data()
   print ("MWPC: fwhm v: " + str(fwhm_v) + " fwhm_h: " + str(fwhm_h) + " centre_v: " + str(centre_v) + " centre_h: " + str(centre_h))
   if abs(centre_v) > (1+deviation)*ref_cv:
-    msg += "MWPC vertical center offset: " + str(centre_v) + " mm\n"
+    centre_msg += "MWPC vertical center offset: " + str(centre_v) + " mm\n"
   if abs(centre_h) > (1+deviation)*ref_ch:
-    msg += "MWPC horizontal center offset: " + str(centre_h) + " mm\n"
+    centre_msg += "MWPC horizontal center offset: " + str(centre_h) + " mm\n"
   if fwhm_v > (1+deviation)*ref_fv:
-    msg += "MWPC vertical FWHM too large: " + str(fwhm_v) + " mm\n"
+    fwhm_msg += "MWPC vertical FWHM too large: " + str(fwhm_v) + " mm\n"
   if fwhm_h > (1+deviation)*ref_fh:
-    msg += "MWPC horizontal FWHM too large: " + str(fwhm_h) + " mm\n"
-  return msg
+    fwhm_msg += "MWPC horizontal FWHM too large: " + str(fwhm_h) + " mm\n"
+  return centre_msg, fwhm_msg
 
 def check_SEC():
   db_cmd = db_commands()
@@ -103,8 +104,12 @@ def running():
   while True:
     xmsg = ""
     ymsg = ""
-    mwpc_msg = ""
+    centre_msg = ""
+    fwhm_msg = ""
     sec_msg = ""
+    beam_status = 1
+    centre_status = 1
+    fwhm_status = 1
     subject = "Warning "
     warn_email = False
 
@@ -112,33 +117,39 @@ def running():
     sec_msg = check_SEC()
     if sec_msg != '':
       warn_email = True
+      beam_status = 0
+      centre_status = 0
+      fwhm_status = 0
       subject += 'BEAM DOWN! '
 
     xmsg, ymsg, xcentre, xfwhm, ycentre, yfwhm, bpm_error = check_BPM()
 
     # Make sure the centre/fwhm is acutally off by also comparing to the SEC
     if (xfwhm or xcentre or ycentre or yfwhm or bpm_error):
-      mwpc_msg = check_MWPC()
-      if mwpc_msg != '':
+      centre_msg, fwhm_msg = check_MWPC()
+      if centre_msg != '':
         warn_email = True
         subject += 'Beam off centre! '
+      if fwhm_msg != '':
+        warn_email = True
+        subject += 'Beam fwhm too wide '
 
     dbc = db_commands()
     last_msg = dbc.get_last_msg()
     t_now = (datetime.now()).strftime(tf)
     # Only send message if we haven't already
     whole_msg = 'SEC INFO\n----------------------------------------\n\n'+sec_msg+'\n\nBPM INFO\n----------------------------------------\n\nX-AXIS\n\n'\
-    + xmsg + '\nY-AXIS\n\n' + ymsg + '\n\nMWPC INFO\n----------------------------------------\n\n'+mwpc_msg
+    + xmsg + '\nY-AXIS\n\n' + ymsg + '\n\nMWPC INFO\n----------------------------------------\n\n'+centre_msg+fwhm_msg
 
     if last_msg is None:
         if warn_email:
-            alert(subject, xmsg+ymsg+mwpc_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
-            dbc.insert_msg((t_now, xmsg+ymsg+mwpc_msg+sec_msg, 0))
+            alert(subject, xmsg+ymsg+centre_msg+fwhm_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+            dbc.insert_msg((t_now, xmsg+ymsg+centre_msg+fwhm_msg+sec_msg, 0))
     else:
       if last_msg[-1] == 1:
         if warn_email:
-            alert(subject, xmsg+ymsg+mwpc_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
-            dbc.insert_msg((t_now, xmsg+ymsg+mwpc_msg+sec_msg, 0))
+            alert(subject, xmsg+ymsg+centre_msg+fwhm_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+            dbc.insert_msg((t_now, xmsg+ymsg+centre_msg+fwhm_msg+sec_msg, 0))
       elif last_msg[-1] == 0 and warn_email == False: 
           # Beam is now up again
           alert("Notice CHARM beam is up again", "Beam up again at " + t_now, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')

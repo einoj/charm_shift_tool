@@ -31,7 +31,7 @@ class db_commands:
         # Make sure that tables exist
         self.cur.execute('create table if not exists ' + set_table + ' (id INTEGER PRIMARY KEY, name text, setting int)')
         self.cur.execute('create table if not exists ' + user_table + ' (id INTEGER PRIMARY KEY, name text, email text, phone int)')
-        self.cur.execute('create table if not exists ' + msg_table + ' (id INTEGER PRIMARY KEY, time text, msg text, status int)')
+        self.cur.execute('create table if not exists ' + msg_table + ' (id INTEGER PRIMARY KEY, time text, msg text, status int, fwhm int, centre int)')
         #self.cur.execute('create table if not exists ' + status_table + ' (id INTEGER PRIMARY KEY, text, msg text, status int)')
         self.cur.execute('create table if not exists ' + response_table + ' (id INTEGER PRIMARY KEY, name text, status int)')
         self.con.commit()
@@ -85,12 +85,12 @@ class db_commands:
       return setting
 
     def insert_msg(self, data):
-      if len(data) != 3:
-        print("ERROR: A row in settings has 2 columns, not " + str(len(data)) + "!")
+      if len(data) != 5:
+        print("ERROR: A row in settings has 5 columns, not " + str(len(data)) + "!")
         return -1
       self.load_db()
       #data = [self.cur.lastrowid()+1]+data
-      self.cur.execute("insert into " + msg_table + "(time,msg,status)" " values(?,?,?)", data)
+      self.cur.execute("insert into " + msg_table + "(time,msg,status,fwhm,centre)" " values(?,?,?,?,?)", data)
       self.con.commit()
       self.close_db()
 
