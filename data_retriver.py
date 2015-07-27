@@ -65,6 +65,7 @@ class BPM:
   # 4 time stamped samplings
   def dl_bpm_data(self, url):
     bpm_error = False
+    data_dict = 'Error'
 
     try:
       html = request.urlopen(url).read().decode("utf8")
