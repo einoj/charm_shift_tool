@@ -112,6 +112,8 @@ def running():
     fwhm_status = 1
     subject = "Warning "
     warn_email = False
+    warn_centre_email = False
+    warn_fwhm_email = False
 
     #check only SEC for intensity
     sec_msg = check_SEC()
@@ -121,39 +123,48 @@ def running():
       centre_status = 0
       fwhm_status = 0
       subject += 'BEAM DOWN! '
-
+    
     xmsg, ymsg, xcentre, xfwhm, ycentre, yfwhm, bpm_error = check_BPM()
 
     # Make sure the centre/fwhm is acutally off by also comparing to the SEC
     if (xfwhm or xcentre or ycentre or yfwhm or bpm_error):
       centre_msg, fwhm_msg = check_MWPC()
       if centre_msg != '':
-        warn_email = True
+        warn_centre_email = True
         subject += 'Beam off centre! '
       if fwhm_msg != '':
-        warn_email = True
+        warn_fwhm_email = True
         subject += 'Beam fwhm too wide '
 
     dbc = db_commands()
     last_msg = dbc.get_last_msg()
     t_now = (datetime.now()).strftime(tf)
+
     # Only send message if we haven't already
     whole_msg = 'SEC INFO\n----------------------------------------\n\n'+sec_msg+'\n\nBPM INFO\n----------------------------------------\n\nX-AXIS\n\n'\
     + xmsg + '\nY-AXIS\n\n' + ymsg + '\n\nMWPC INFO\n----------------------------------------\n\n'+centre_msg+fwhm_msg
-
+    
     if last_msg is None:
-        if warn_email:
-            alert(subject, xmsg+ymsg+centre_msg+fwhm_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
-            dbc.insert_msg((t_now, xmsg+ymsg+centre_msg+fwhm_msg+sec_msg, 0))
+        if warn_email or warn_fwhm_email or warn_centre_email:
+            alert(subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+            dbc.insert_msg((t_now, whole_msg, 1*warn_email, 1*warn_fwhm_email, 1*warn_centre_email))
     else:
-      if last_msg[-1] == 1:
+      if last_msg[-3] == 1:
         if warn_email:
-            alert(subject, xmsg+ymsg+centre_msg+fwhm_msg+sec_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
-            dbc.insert_msg((t_now, xmsg+ymsg+centre_msg+fwhm_msg+sec_msg, 0))
-      elif last_msg[-1] == 0 and warn_email == False: 
+        # If there is a warn_email, everything is down
+            alert(subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+            dbc.insert_msg((t_now, whole_msg, 0, 0, 0))
+        else:
+            if (warn_fwhm_email and last_msg[-2] == 1) or (warn_centre_email and last_msg[-1] == 1):
+                alert(subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+                dbc.insert_msg((t_now, whole_msg, 1, 1*warn_fwhm_email, 1*warn_centre_email))
+            elif (warn_fwhm == False and last_msg[-2] == 0) and (warn_centre == False and last_msg[-1] == 0):
+                alert('Notic Beam Centered and FWHM Normal', whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+                dbc.insert_msg((t_now, whole_msg, 1, 1, 1))
+      elif last_msg[-3] == 0 and warn_email == False:
           # Beam is now up again
           alert("Notice CHARM beam is up again", "Beam up again at " + t_now, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
-          dbc.insert_msg((t_now, "Beam up again.", 1))
+          dbc.insert_msg((t_now, "Beam up again.", 1,1*warn_fwhm_email,1*warn_centre_email))
     del dbc
     print(whole_msg)
     time.sleep(600)

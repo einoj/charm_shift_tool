@@ -31,7 +31,10 @@ def sec_screens():
     
     dates = date2num(times)
     plot_date(dates,counts,'r-',label=variable_name)
-    title(str(times[0])[0:19] + ' to ' + str(times[-1])[0:19]) # [0:19] removes the microseconds to avoid too long title
+    try:
+        title(str(times[0])[0:19] + ' to ' + str(times[-1])[0:19]) # [0:19] removes the microseconds to avoid too long title
+    except IndexError:
+      title(str(datetime.now()))
     legend([variable_name])
     grid(True)
     xlabel('LOCAL_TIME')
@@ -63,4 +66,5 @@ if __name__ == "__main__":
     finally:
       print('closing')
       zf.close()
+    print('DONE: Sleeping for 15 minutes')
     sleep(900) #sleep 900 seconds aka 15 min
