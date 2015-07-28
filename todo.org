@@ -19,7 +19,7 @@
 - [X] Check centering of the beam for BPM and MWPC
 - [X] Should be checking beam intensity first, but it doesn't
 
-* TODO Data retrival [8/9]
+* TODO Data retrival [8/10]
 - [X] Write code to download BPM data from https://ps-irrad.web.cern.ch/irrad/bpm.php
 - [X] Write regex to extract data from the html downloaded in the point above.
 - [X] Write a class for getting data from MWPC, can be based on adams code.
