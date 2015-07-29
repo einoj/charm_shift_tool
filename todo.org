@@ -19,7 +19,7 @@
 - [X] Check centering of the beam for BPM and MWPC
 - [X] Should be checking beam intensity first, but it doesn't
 
-* TODO Data retrival [8/10]
+* TODO Data retrival [9/10]
 - [X] Write code to download BPM data from https://ps-irrad.web.cern.ch/irrad/bpm.php
 - [X] Write regex to extract data from the html downloaded in the point above.
 - [X] Write a class for getting data from MWPC, can be based on adams code.
@@ -29,7 +29,7 @@
 - [X] Fix the check for SEC 1 as is currently saying there is no beam even when there is
 - [X] Fix that the MWPC class crashes when there is no beam.
 - [ ] Instead of just looking at the maximum BPM value, look at the maximum of the gaussian fit to avoid errors with max peaks outside the gaussian peak.
-- [ ] Check that there is a sec sample at least 80% of the last minutes, for example 8 samples in the last 10 minutes.
+- [X] Check that there is a sec sample at least 80% of the last minutes, for example 8 samples in the last 10 minutes.
   This is done to avoid the FWHM warning and Centre warinng being sent before the beam down warning.
 
 * TODO Messaging [3/4]
