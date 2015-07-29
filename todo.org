@@ -41,6 +41,7 @@
 - There is a response table in the database. it has three rows, beam, fwhm, and centre.
 - [X] Set them to 0 when their respective statuses goes down, for example if the intensity is too low, set beam to 0.
 - [ ] Then set them to 1 after a user responds.
+- [ ] Consider using only one respond button.
 
 * TODO Database for strong references and settings [6/6]
 - [X] Setup SQLITE3 database
@@ -50,6 +51,8 @@
 - [X] Create a table for storing user info.
 - [X] Implement the __del__(self) function so that the database connection is closed when the python destructor is called on the object.
 
+* TODO Testing [0/1]
+- [ ] Design a test to run on the alert part, right now it is very messy and needs testing.
 * TODO Other [2/3]
 - [X] Ask Maurice Glaser how to obtain data from th BPM.
   Email sent, waiting for reply. 2015-07-03 Fri 10:23.

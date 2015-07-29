@@ -158,6 +158,7 @@ def running():
 
     dbc = db_commands()
     last_msg = dbc.get_last_msg()
+    response = dbc.get_response()
     t_now = (datetime.now()).strftime(tf)
 
     # Only send message if we haven't already
@@ -174,17 +175,27 @@ def running():
         # If there is a warn_email, everything is down
             alert(subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
             dbc.insert_msg((t_now, whole_msg, 0, 0, 0))
+            dbc.respond(0):
         else:
+            # FWHM too large or Centre off
             if (warn_fwhm_email and last_msg[-2] == 1) or (warn_centre_email and last_msg[-1] == 1):
                 alert(subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
                 dbc.insert_msg((t_now, whole_msg, 1, 1*warn_fwhm_email, 1*warn_centre_email))
+                dbc.respond(0):
+            # FWHM and Centre back to normal
             elif (warn_fwhm == False and last_msg[-2] == 0) and (warn_centre == False and last_msg[-1] == 0):
                 alert('Notic Beam Centered and FWHM Normal', whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
                 dbc.insert_msg((t_now, whole_msg, 1, 1, 1))
+                dbc.respond(1):
       elif last_msg[-3] == 0 and warn_email == False:
           # Beam is now up again
           alert("Notice CHARM beam is up again", "Beam up again at " + t_now, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
           dbc.insert_msg((t_now, "Beam up again.", 1,1*warn_fwhm_email,1*warn_centre_email))
+          dbc.respond(1):
+      elif (last_msg[-3] == 0 or last_msg[-2] == 0 or last_msg[-1] == 0) and response == (0,)):
+        #Keep sending messages until user responds
+        alert('Resending ' + subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+
     del dbc
     print(whole_msg)
     time.sleep(600)

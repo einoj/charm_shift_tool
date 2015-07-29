@@ -58,7 +58,7 @@ class db_commands:
 
     def insert_setting(self, data):
       if len(data) != 2:
-        print("ERROR: A row in settings has 3 columns, not " + str(len(data)) + "!")
+        print("ERROR: A row in settings has 2 columns, not " + str(len(data)) + "!")
         return -1
       self.load_db()
       # Insert new setting if one with the same name does not exist
@@ -117,18 +117,25 @@ class db_commands:
       centre = msg[5]
       return beam, fwhm, centre
 
-    def respond(self, item, x):
-      if type(item) != str or type(x) != int:
+    def get_response(self):
+      self.load_db()
+      self.cur.execute("select status from "+response_table+" where name='beam'")
+      beam = self.cur.fetchone()
+      # Will return None if there is no response in database
+      return beam
+
+    def respond(self, x):
+      if type(x) != int:
         print("ERROR: first argument must be a string and second argument an int")
         return -1
       self.load_db()
-      self.cur.execute("select rowid from "+response_table+"where name = " + item)
-      data = (item,x)
+      self.cur.execute("select rowid from "+response_table+" where name='beam'")
+      data = ('beam',x)
       row = self.cur.fetchone()
       if row is None:
         self.cur.execute("insert into " + response_table + "(name, status)" " values(?,?)", data)
       else:
-        self.cur.execute("update "+response_table+" set status=? where name=?",(x,item))
+        self.cur.execute("update "+response_table+" set status=? where name='beam'",(x,))
       self.con.commit()
       self.close_db()
 

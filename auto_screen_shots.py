@@ -2,7 +2,7 @@ from archive.database_call_v0 import lgdb_tools
 from data_retriver import Timber_detectors
 from datetime import datetime 
 from matplotlib.dates import date2num
-from matplotlib.pyplot import plot_date, show, title, grid, legend, xlabel, ylabel, savefig
+from matplotlib.pyplot import plot_date, show, title, grid, legend, xlabel, ylabel, savefig, xticks, tight_layout
 from time import sleep
 import subprocess
 import zipfile
@@ -39,6 +39,8 @@ def sec_screens():
     grid(True)
     xlabel('LOCAL_TIME')
     ylabel('count')
+    xticks(rotation=70)
+    tight_layout()
 
     savefig('//cern.ch/dfs/Websites/t/test-charmShiftTool/screens/sec.png', dpi=220)
 
