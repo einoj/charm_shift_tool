@@ -86,10 +86,30 @@ def check_SEC():
   s = SEC()
   data = s.get_data()
   reference = 3.5e11
-  now = roundTime(datetime.now(), roundTo=60*60)
+  now = datetime.now()
   msg = ''
   warning = '{} - PROBLEM! NO BEAM!'.format(datetime.now())
+
+  if type(data) == bool:
+    # No recent sec data in timber
+    return warning
+
   try:
+    #check number of samples in last five minutes
+    #there should be about 3.4 per minute
+    #if it drops below 2.4 per minute, send a warning.
+    #Do this because even if there has been no samples 
+    #in the last five miutes, the intensity will still be high enough.
+    fiveminago  = now - timedelta(minutes=5)
+    samplecnt = 0
+    timeindex = len(data.index)-1
+    while (data.index[timeindex] > fiveminago):
+      samplecnt += 1
+      timeindex -= 1
+    if (samplecnt < 10):
+      return warning
+
+    # Enough samples in the last 5 minutes, return intensity
     intensity = (data['pot/spill'].mean())
     last_spill = data.index[-1]
     print ("SEC intensity: " + str(intensity))

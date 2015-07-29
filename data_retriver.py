@@ -252,8 +252,8 @@ class SEC(Timber_detectors):
       if not data.empty: 
         data['pot/spill'] = data['Counts'].values*self.calibration['SEC1']
       else:
-        data = t_now # no SEC data
+        data = False# no SEC data
     else:
     #This should probably be fixed by using a custom pandas DataFrame
-      data = t_now
+      data = False
     return data
