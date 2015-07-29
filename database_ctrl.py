@@ -113,7 +113,9 @@ class db_commands:
       self.cur.execute("select * from "+msg_table+" where id=(select max(id) from " + msg_table+")")
       msg = self.cur.fetchone() 
       beam = msg[3]
-      return beam 
+      fwhm = msg[4]
+      centre = msg[5]
+      return beam, fwhm, centre
 
     def respond(self, item, x):
       if type(item) != str or type(x) != int:
