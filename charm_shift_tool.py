@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from database_ctrl import *
 from email_tools import alert
 from database_ctrl import db_commands
+from shifter import get_shifter
 import time
 import urllib
 
@@ -135,6 +136,12 @@ def running():
     warn_centre_email = False
     warn_fwhm_email = False
 
+    dbc = db_commands()
+    shifter = get_shifter()
+    dbc.insert_shifter(shifter)
+    last_msg = dbc.get_last_msg()
+    response = dbc.get_response()
+
     #check only SEC for intensity
     sec_msg = check_SEC()
     if sec_msg != '':
@@ -156,9 +163,6 @@ def running():
         warn_fwhm_email = True
         subject += 'Beam fwhm too wide '
 
-    dbc = db_commands()
-    last_msg = dbc.get_last_msg()
-    response = dbc.get_response()
     t_now = (datetime.now()).strftime(tf)
 
     # Only send message if we haven't already
