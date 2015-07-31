@@ -63,6 +63,9 @@
 
 * TODO Testing [0/1]
 - [ ] Design a test to run on the alert part, right now it is very messy and needs testing.
+
+* TODO Guide
+- [ ] Write howto extract data from sheets including how to generate oauth keys and sharing the sheet with that account.
 * TODO Other [2/3]
 - [X] Ask Maurice Glaser how to obtain data from th BPM.
   Email sent, waiting for reply. 2015-07-03 Fri 10:23.
