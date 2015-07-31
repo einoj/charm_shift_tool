@@ -4,7 +4,5 @@ from datetime import datetime
 tf = '%Y-%m-%d %H:%M:%S'
 
 dbc = db_commands()
-dbc.respond(0)
-dbc.respond(0)
-response = dbc.get_response()
-print(response==(0,))
+dbc.insert_shifter('Ruben')
+print(dbc.get_shifter())

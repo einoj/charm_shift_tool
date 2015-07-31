@@ -16,6 +16,7 @@ user_table = 'User_info'
 msg_table = 'messages'
 #status_table 'status'
 response_table = 'response'
+shifter_table = 'shifter'
 
 default_pos = []
 
@@ -34,6 +35,7 @@ class db_commands:
         self.cur.execute('create table if not exists ' + msg_table + ' (id INTEGER PRIMARY KEY, time text, msg text, status int, fwhm int, centre int)')
         #self.cur.execute('create table if not exists ' + status_table + ' (id INTEGER PRIMARY KEY, text, msg text, status int)')
         self.cur.execute('create table if not exists ' + response_table + ' (id INTEGER PRIMARY KEY, name text, status int)')
+        self.cur.execute('create table if not exists ' + shifter_table + ' (id INTEGER , name text)')
         self.con.commit()
         self.close_db()
 
@@ -73,6 +75,28 @@ class db_commands:
         self.cur.execute("update settings set setting=? where name=?",(data[1],data[0]))
       self.con.commit()
       self.close_db()
+
+    def insert_shifter(self, name):
+      if type(name) != str:
+        print("ERROR: Shifter name must be a string !")
+        return -1
+      self.load_db()
+      self.cur.execute("select * from shifter")
+      row = self.cur.fetchone()
+      if row is None:
+        self.cur.execute("insert into " + shifter_table + "(id, name) values("  +str(1) +",'"+name+"')")
+      else:
+        self.cur.execute("update shifter set name='" + name +"' where id=1")
+      self.con.commit()
+      self.close_db()
+
+    def get_shifter(self):
+      self.load_db()
+      self.cur.execute("select name from " + shifter_table)
+      shifter = self.cur.fetchone()
+      if shifter != None:
+        shifter = shifter[0]
+      return shifter
 
     def get_setting(self, settingname):
       if type(settingname) != str:
