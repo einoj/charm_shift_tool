@@ -12,7 +12,9 @@ https://wikis.cern.ch/pages/viewpage.action?pageId=54067820&src=contextnavpagetr
 - Pandas
 - python-dateutil
 - scipy
+
 # For extracting user data from google sheets
+
 - gspread
 - oauth2client
 - PyOpenSSL
