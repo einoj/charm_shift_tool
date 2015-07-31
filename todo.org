@@ -32,7 +32,7 @@
 - [X] Check that there is a sec sample at least 80% of the last minutes, for example 8 samples in the last 10 minutes.
   This is done to avoid the FWHM warning and Centre warinng being sent before the beam down warning.
 
-* TODO Messaging [5/6]
+* TODO Messaging [5/7]
 - [X] Find a way to avoid sending an error message several times for discrepancies in the same varible.
   As an example if the FHWM of BPM4 decreases to under 70% of the reference, send an email, but don't
   send a new email about it before after it has gone back to normal.
@@ -43,6 +43,7 @@
 - [X] Then set them to 1 after a user responds.
 - [X] Consider using only one respond button.
 - [ ] Send an email when beam is centered/fwhm is ok again
+- [ ] Resending works when beam is down, not tested for centering and fwhm. Do the test.
   
 * TODO Extract shifter [1/2]
 - [X] Have to add an 'x' or something like it to each cell in the spread sheet that has a shifter.
