@@ -45,13 +45,14 @@
 - [ ] Send an email when beam is centered/fwhm is ok again
 - [ ] Resending works when beam is down, not tested for centering and fwhm. Do the test.
   
-* TODO Extract shifter [1/2]
+* TODO Extract shifter [2/3]
 - [X] Have to add an 'x' or something like it to each cell in the spread sheet that has a shifter.
   This is because extracting fomrating like color is not supported in the google spread sheet API, 
   and is not likely to be supported in the near future as it has been a reported issue since 2007
   https://code.google.com/a/google.com/p/apps-api-issues/issues/detail?can=2&start=0&num=100&q=&colspec=Stars%20Opened%20ID%20Type%20Status%20Summary%20API%20Owner&groupby=&sort=&id=37
-- [ ] Write a function that has a date as parameter and returns the name of the shifter.
+- [X] Write a function that has a date as parameter and returns the name of the shifter.
 - [ ] Input the email + phone number of the shifters into the data base using their sheet name as key.
+- [ ] Run the function together with the main function and put the user into the database, as the web version of python does not have gspread
 
 * TODO Database for strong references and settings [6/6]
 - [X] Setup SQLITE3 database
