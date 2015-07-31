@@ -68,5 +68,5 @@ if __name__ == "__main__":
     finally:
       print('closing')
       zf.close()
-    print('DONE: Sleeping for 15 minutes')
-    sleep(900) #sleep 900 seconds aka 15 min
+    print('DONE: Sleeping for 5 minutes')
+    sleep(300) #sleep 900 seconds aka 15 min
