@@ -18,7 +18,7 @@ def get_date(shift_start):
     # Shifter from yesterday is still working
     now -= timedelta(hours=24)
 
-  date = str(now.day)+ '/' + str(now.month).zfill(2) + '/' + str(now.year)
+  date = str(now.day).zfill(2)+ '/' + str(now.month).zfill(2) + '/' + str(now.year)
   return date
 
 def get_shifter():
@@ -43,4 +43,4 @@ def get_shifter():
  cols2 = worksheet.col_values(3)
 
 if __name__ == '__main__':
-  get_shifter()
+  print(get_shifter())
