@@ -6,203 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>894</width>
-    <height>757</height>
+    <width>1024</width>
+    <height>908</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QSpinBox" name="downTimeBox">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>10</y>
-      <width>181</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>120</number>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="deviationBox">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>60</y>
-      <width>181</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>999</number>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="secRefBox">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>110</y>
-      <width>181</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>999</number>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="mwpcVFwhmRefBox">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>160</y>
-      <width>181</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>999</number>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>15</y>
-      <width>301</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Down time before users are alerted [min]</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>60</y>
-      <width>301</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Deviation before users are alerted [%]</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>301</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>SEC reference [e10]</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>160</y>
-      <width>281</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>MWPC vertical FWHM refrence</string>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="mwpcVCentreRefBox">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>210</y>
-      <width>181</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>999</number>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="mwpcHFwhmRefBox">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>260</y>
-      <width>181</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>999</number>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="mwpcHCentreRefBox">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>310</y>
-      <width>181</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>999</number>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_5">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>210</y>
-      <width>291</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>MWPC vertical Centre reference [e-1 mm]</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>260</y>
-      <width>281</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>MWPC horizontal FWHM reference</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_7">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>310</y>
-      <width>281</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>MWPC horizontal Centre  reference [e-1 mm]</string>
-    </property>
-   </widget>
    <widget class="QPlainTextEdit" name="plainTextEdit">
     <property name="geometry">
      <rect>
-      <x>523</x>
-      <y>10</y>
-      <width>361</width>
-      <height>701</height>
+      <x>590</x>
+      <y>0</y>
+      <width>431</width>
+      <height>541</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -224,18 +42,185 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
      <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>350</y>
-      <width>101</width>
-      <height>31</height>
+      <x>0</x>
+      <y>0</y>
+      <width>591</width>
+      <height>541</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Load Defaults</string>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="4" column="1">
+      <widget class="QSpinBox" name="mwpcVCentreRefBox">
+       <property name="maximum">
+        <number>999</number>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QSpinBox" name="mwpcVFwhmRefBox">
+       <property name="maximum">
+        <number>999</number>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QSpinBox" name="mwpcHCentreRefBox">
+       <property name="maximum">
+        <number>999</number>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QSpinBox" name="secRefBox">
+       <property name="maximum">
+        <number>999</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="downTimeBox">
+       <property name="maximum">
+        <number>120</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Deviation before users are alerted [%]</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>SEC reference [e10]</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>MWPC vertical FWHM refrence</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>MWPC vertical Centre reference [e-1 mm]</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QSpinBox" name="mwpcHFwhmRefBox">
+       <property name="maximum">
+        <number>999</number>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>MWPC horizontal FWHM reference</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="deviationBox">
+       <property name="maximum">
+        <number>999</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Down time before users are alerted [min]</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>MWPC horizontal Centre  reference [e-1 mm]</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Load Defaults</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>540</y>
+      <width>1021</width>
+      <height>281</height>
+     </rect>
     </property>
+    <layout class="QGridLayout" name="gridLayout_4">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>User Name</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLineEdit" name="lineEdit"/>
+     </item>
+     <item row="3" column="2">
+      <widget class="QLineEdit" name="lineEdit_3"/>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLineEdit" name="lineEdit_5"/>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="lineEdit_6"/>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="lineEdit_2"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLineEdit" name="lineEdit_4"/>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>Phone number</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_9">
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>Email</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -243,8 +228,8 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>894</width>
-     <height>21</height>
+     <width>1024</width>
+     <height>38</height>
     </rect>
    </property>
   </widget>
@@ -252,102 +237,6 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>downTimeBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>downtime_changed()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>497</x>
-     <y>46</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>514</x>
-     <y>46</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>secRefBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>sec_ref_changed()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>449</x>
-     <y>146</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>524</x>
-     <y>143</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>mwpcVFwhmRefBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>mwpc_V_FWHM_changed()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>450</x>
-     <y>198</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>522</x>
-     <y>199</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>mwpcVCentreRefBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>mwpc_V_centre_changed()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>250</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>525</x>
-     <y>249</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>mwpcHFwhmRefBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>mwpc_H_FWHM_changed()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>428</x>
-     <y>295</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>527</x>
-     <y>294</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>mwpcHCentreRefBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>mwpc_H_centre_changed()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>446</x>
-     <y>345</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>526</x>
-     <y>350</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>deviationBox</sender>
    <signal>valueChanged(int)</signal>
@@ -377,6 +266,102 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
     <hint type="destinationlabel">
      <x>88</x>
      <y>422</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>mwpcVCentreRefBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>mwpc_V_centre_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>250</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>525</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>mwpcVFwhmRefBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>mwpc_V_FWHM_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>450</x>
+     <y>198</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>522</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>secRefBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>sec_ref_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>449</x>
+     <y>146</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>524</x>
+     <y>143</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>mwpcHFwhmRefBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>mwpc_H_FWHM_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>428</x>
+     <y>295</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>527</x>
+     <y>294</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>downTimeBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>downtime_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>497</x>
+     <y>46</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>514</x>
+     <y>46</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>mwpcHCentreRefBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>mwpc_H_centre_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>446</x>
+     <y>345</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>526</x>
+     <y>350</y>
     </hint>
    </hints>
   </connection>

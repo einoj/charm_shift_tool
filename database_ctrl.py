@@ -10,7 +10,8 @@
 
 import sqlite3
 
-database  = '//cern.ch/dfs/Websites/t/test-charmShiftTool/data/charm_shift.db'
+#database  = '//cern.ch/dfs/Websites/t/test-charmShiftTool/data/charm_shift.db'
+database = './charm_shift.db'
 set_table = 'settings'
 user_table = 'User_info'
 msg_table = 'messages'
@@ -105,7 +106,10 @@ class db_commands:
       self.load_db()
       self.cur.execute("select * from settings where name='"+settingname+"'")
       setting = self.cur.fetchone()
-      setting = int(setting[2])
+      try:
+        setting = int(setting[2])
+      except NoneType:
+          return None
       return setting
 
     def insert_msg(self, data):
