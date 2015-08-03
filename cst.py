@@ -8,6 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from database_ctrl import db_commands
+from shifter import get_all_shifters
 
 class Ui_MainWindow(object):
 
@@ -128,13 +129,14 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addWidget(self.label_8, 0, 0, 1, 1)
 
         self.lineEdits = []
-        for i in range(6):
+        num_shifters = len(get_all_shifters())
+        for i in range(num_shifters*3):
           myLineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
           myLineEdit.setObjectName("lineEdit_"+str(i))
           self.lineEdits.append(myLineEdit)
 
         i = 0
-        for j in range(2,4):
+        for j in range(2,num_shifters+2):
           for k in range(0,3):
             self.gridLayout_4.addWidget(self.lineEdits[i], j, k, 1, 1)
             i += 1
@@ -210,4 +212,20 @@ class Ui_MainWindow(object):
         self.label_8.setText(_translate("MainWindow", "User Name"))
         self.label_10.setText(_translate("MainWindow", "Phone number"))
         self.label_9.setText(_translate("MainWindow", "Email"))
+
+        shifters = get_all_shifters()
+        shifters = sorted(shifters, key=str.lower)
+        num_shifters = len(shifters)
+        print(shifters) 
+        n = 0
+        e = 1
+        p = 2
+        for name in shifters:
+          self.lineEdits[n].setText(_translate("MainWindow", name))
+          self.lineEdits[e].setText(_translate("MainWindow", "eino.juhani.oltedal@cern.ch"))
+          self.lineEdits[p].setText(_translate("MainWindow", "004741760950"))
+          n += 3
+          e += 3
+          p += 3
+
 
