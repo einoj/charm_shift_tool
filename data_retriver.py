@@ -102,11 +102,14 @@ class BPM:
   
   # returns the last samples from all the BPMs
   # both in the Y and X axis
+  # Maybe only check BPM1
   def get_bpm_data(self):
     xdata = []
     ydata = []
     for i in range(1,5):
       data, bpm_error = self.dl_bpm_data(bpm_url+str(i))
+      if bpm_error == True:
+        return xdata, ydata, bpm_error
       xdata.append(self.extract_xy_data(data['X']))
       ydata.append(self.extract_xy_data(data['Y']))
     return xdata, ydata, bpm_error
