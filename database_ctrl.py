@@ -1,19 +1,8 @@
-# Functions for writing and readind to the charm shift database.
-# The data base contains three different tables, one for user settings
-# one containing reference values for the beam position detectors, and
-# one for the beam intensity detectors.
-# There are three user settings inserted into the settings table.
-# They are:
-# 1. Amout of time the beam is down before a message is sent in minutes,
-# 2. Percentage increase/decrease in the intesity from the reference before a message is sent.
-# 3. Percentage increase/decrease in the doserate per hour before a message is sent.
-
 import sqlite3
 
 #database  = '//cern.ch/dfs/Websites/t/test-charmShiftTool/data/charm_shift.db'
 database = './charm_shift.db'
 set_table = 'settings'
-user_table = 'User_info'
 msg_table = 'messages'
 #status_table 'status'
 response_table = 'response'
@@ -32,7 +21,6 @@ class db_commands:
         self.load_db()
         # Make sure that tables exist
         self.cur.execute('create table if not exists ' + set_table + ' (id INTEGER PRIMARY KEY, name text, setting int)')
-        self.cur.execute('create table if not exists ' + user_table + ' (id INTEGER PRIMARY KEY, name text, email text, phone int)')
         self.cur.execute('create table if not exists ' + msg_table + ' (id INTEGER PRIMARY KEY, time text, msg text, status int, fwhm int, centre int)')
         #self.cur.execute('create table if not exists ' + status_table + ' (id INTEGER PRIMARY KEY, text, msg text, status int)')
         self.cur.execute('create table if not exists ' + response_table + ' (id INTEGER PRIMARY KEY, name text, status int)')
@@ -49,15 +37,6 @@ class db_commands:
     
     def close_db(self):
       self.con.close()
-
-    def insert_user(self, data):
-      if len(data) != 4:
-        print("ERROR: A row in settings has 4 columns, not " + str(len(data)) + "!")
-        return -1
-      self.load_db()
-      self.cur.execute("insert into " + user_table + " values(?,?,?)", data)
-      self.con.commit()
-      self.close_db()
 
     def insert_setting(self, data):
       if len(data) != 2:
@@ -197,6 +176,5 @@ class db_commands:
       self.load_db()
       self.cur.execute("delete from " + set_table)
       self.cur.execute("delete from " + msg_table)
-      self.cur.execute("delete from " + user_table)
       self.con.commit()
       self.close_db()
