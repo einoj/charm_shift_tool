@@ -10,8 +10,8 @@
 
 import sqlite3
 
-database  = '//cern.ch/dfs/Websites/t/test-charmShiftTool/data/charm_shift.db'
-#database = './charm_shift.db'
+#database  = '//cern.ch/dfs/Websites/t/test-charmShiftTool/data/charm_shift.db'
+database = './charm_shift.db'
 set_table = 'settings'
 user_table = 'User_info'
 msg_table = 'messages'
@@ -36,7 +36,7 @@ class db_commands:
         self.cur.execute('create table if not exists ' + msg_table + ' (id INTEGER PRIMARY KEY, time text, msg text, status int, fwhm int, centre int)')
         #self.cur.execute('create table if not exists ' + status_table + ' (id INTEGER PRIMARY KEY, text, msg text, status int)')
         self.cur.execute('create table if not exists ' + response_table + ' (id INTEGER PRIMARY KEY, name text, status int)')
-        self.cur.execute('create table if not exists ' + shifter_table + ' (id INTEGER , name text)')
+        self.cur.execute('create table if not exists ' + shifter_table + ' (id INTEGER PRIMARY KEY, name text, email text, phone int, current int)')
         self.con.commit()
         self.close_db()
 
@@ -77,23 +77,32 @@ class db_commands:
       self.con.commit()
       self.close_db()
 
-    def insert_shifter(self, name):
-      if type(name) != str:
-        print("ERROR: Shifter name must be a string !")
+    def insert_shifter(self, data):
+      if len(data) != 4:
+        print("ERROR: shifter data must have length 4!")
         return -1
       self.load_db()
-      self.cur.execute("select * from shifter")
+      self.cur.execute("select rowid from " + shifter_table + " where name = ?",(data[0],))
       row = self.cur.fetchone()
       if row is None:
-        self.cur.execute("insert into " + shifter_table + "(id, name) values("  +str(1) +",'"+name+"')")
+        self.cur.execute("insert into " + shifter_table + "(name, email, phone, current)" " values(?,?,?,?)", data)
       else:
-        self.cur.execute("update shifter set name='" + name +"' where id=1")
+        self.cur.execute("update " + shifter_table + " set email=?, phone=?, current=? where name=?",(data[1],data[2],data[3],data[0]))
       self.con.commit()
       self.close_db()
 
-    def get_shifter(self):
+    def set_current_shiter(self, name):
+      current = self.get_current_shifter()
+      if current == None:
+        self.cur.execute("update " + shifter_table + " set current=1 where name='"+name+"'")
+      elif current != name:
+        print(current+"ss")
+        self.cur.execute("update " + shifter_table + " set current=0 where name='"+current+"'")
+        self.cur.execute("update " + shifter_table + " set current=1 where name='"+name+"'")
+
+    def get_current_shifter(self):
       self.load_db()
-      self.cur.execute("select name from " + shifter_table)
+      self.cur.execute("select name from " + shifter_table + " where current = 1")
       shifter = self.cur.fetchone()
       if shifter != None:
         shifter = shifter[0]
