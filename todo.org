@@ -1,13 +1,13 @@
-* TODO User interface [3/6]
+* TODO User interface [5/9]
 - [X] Setting for amount of time the beam is down before a message is sent
 - [X] Setting for how much the intesity has to increase/decrease before a message is sent
 - [X] Setting for how much the dose rate per hour has to change before a message is sent
 - [ ] Update text view with last two messages
 - [ ] Connect the GUI to the rest of the program
-- [ ] Load data base settings on startup
+- [X] Load data base settings on startup
 - [ ] Option to set when a day starts and ends, for example 1400 to 0200
 - [ ] option for maximum number of sms sent.
-- [ ] The program should keep sending notifications until the user accepts the reply
+- [X] The program should keep sending notifications until the user accepts the reply
 
 * TODO Message Contents [7/8]
 - [ ] How long has the beam been down
