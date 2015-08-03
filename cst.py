@@ -127,24 +127,36 @@ class Ui_MainWindow(object):
         self.label_8.setObjectName("label_8")
         self.gridLayout_4.addWidget(self.label_8, 0, 0, 1, 1)
 
-        self.lineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
-        self.lineEdit.setObjectName("lineEdit")
-        self.gridLayout_4.addWidget(self.lineEdit, 3, 0, 1, 1)
-        self.lineEdit_3 = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
-        self.lineEdit_3.setObjectName("lineEdit_3")
-        self.gridLayout_4.addWidget(self.lineEdit_3, 3, 2, 1, 1)
-        self.lineEdit_5 = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
-        self.lineEdit_5.setObjectName("lineEdit_5")
-        self.gridLayout_4.addWidget(self.lineEdit_5, 2, 2, 1, 1)
-        self.lineEdit_6 = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
-        self.lineEdit_6.setObjectName("lineEdit_6")
-        self.gridLayout_4.addWidget(self.lineEdit_6, 3, 1, 1, 1)
-        self.lineEdit_2 = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.gridLayout_4.addWidget(self.lineEdit_2, 2, 1, 1, 1)
-        self.lineEdit_4 = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
-        self.lineEdit_4.setObjectName("lineEdit_4")
-        self.gridLayout_4.addWidget(self.lineEdit_4, 2, 0, 1, 1)
+        self.lineEdits = []
+        for i in range(6):
+          myLineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
+          myLineEdit.setObjectName("lineEdit_"+str(i))
+          self.lineEdits.append(myLineEdit)
+
+        i = 0
+        for j in range(2,4):
+          for k in range(0,3):
+            self.gridLayout_4.addWidget(self.lineEdits[i], j, k, 1, 1)
+            i += 1
+
+        #self.lineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
+        #self.lineEdit.setObjectName("lineEdit")
+        #self.gridLayout_4.addWidget(self.lineEdit, 3, 0, 1, 1)
+        #self.lineEdit_3 = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
+        #self.lineEdit_3.setObjectName("lineEdit_3")
+        #self.gridLayout_4.addWidget(self.lineEdit_3, 3, 2, 1, 1)
+        #self.lineEdit_5 = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
+        #self.lineEdit_5.setObjectName("lineEdit_5")
+        #self.gridLayout_4.addWidget(self.lineEdit_5, 2, 2, 1, 1)
+        #self.lineEdit_6 = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
+        #self.lineEdit_6.setObjectName("lineEdit_6")
+        #self.gridLayout_4.addWidget(self.lineEdit_6, 3, 1, 1, 1)
+        #self.lineEdit_2 = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
+        #self.lineEdit_2.setObjectName("lineEdit_2")
+        #self.gridLayout_4.addWidget(self.lineEdit_2, 2, 1, 1, 1)
+        #self.lineEdit_4 = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
+        #self.lineEdit_4.setObjectName("lineEdit_4")
+        #self.gridLayout_4.addWidget(self.lineEdit_4, 2, 0, 1, 1)
 
         self.label_10 = QtWidgets.QLabel(self.gridLayoutWidget_2)
         self.label_10.setAlignment(QtCore.Qt.AlignCenter)

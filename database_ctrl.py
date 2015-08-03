@@ -10,8 +10,8 @@
 
 import sqlite3
 
-#database  = '//cern.ch/dfs/Websites/t/test-charmShiftTool/data/charm_shift.db'
-database = './charm_shift.db'
+database  = '//cern.ch/dfs/Websites/t/test-charmShiftTool/data/charm_shift.db'
+#database = './charm_shift.db'
 set_table = 'settings'
 user_table = 'User_info'
 msg_table = 'messages'
