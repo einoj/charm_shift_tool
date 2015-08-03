@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 
 # Form implementation generated from reading ui file 'cst.ui'
 #
@@ -7,8 +7,28 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import pyqtSignal
 from database_ctrl import db_commands
 from shifter import get_all_shifters
+
+class MyLineEdit(QtWidgets.QLineEdit):
+
+    # Define a new signal called 'trigger' that has no arguments.
+    trigger = pyqtSignal()
+
+    def connect_and_emit_trigger(self):
+        # Connect the trigger signal to a slot.
+        self.trigger.connect(self.handle_trigger)
+
+        # Emit the signal.
+        print("trigger signal received")
+        self.trigger.emit()
+
+    def handle_trigger(self):
+        # Show that the slot has been called.
+
+        print("trigger signal received")
+
 
 class Ui_MainWindow(object):
 
@@ -44,6 +64,12 @@ class Ui_MainWindow(object):
         self.db_cmd.insert_setting(("mwpc_V_center", 16))
         self.db_cmd.insert_setting(("mwpc_H_FWHM", 89))
         self.db_cmd.insert_setting(("mwpc_H_centre", 65))
+
+    def user_email_changed(self):
+        print(self.text())
+
+    def user_phone_changed(self):
+        print(self)
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -128,17 +154,27 @@ class Ui_MainWindow(object):
         self.label_8.setObjectName("label_8")
         self.gridLayout_4.addWidget(self.label_8, 0, 0, 1, 1)
 
-        self.lineEdits = []
+        self.all_user_boxes = []
+        self.emailEdits = []
+        self.phoneEdits = []
         num_shifters = len(get_all_shifters())
-        for i in range(num_shifters*3):
-          myLineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
-          myLineEdit.setObjectName("lineEdit_"+str(i))
-          self.lineEdits.append(myLineEdit)
+        for i in range(num_shifters):
+          myLabel = QtWidgets.QLabel(self.gridLayoutWidget_2) 
+          myLabel.setObjectName("user_label_"+str(i))
+          self.all_user_boxes.append(myLabel)
+          for j in range(2):
+            myLineEdit = MyLineEdit(self.gridLayoutWidget_2)
+            myLineEdit.setObjectName("lineEdit_"+str(i+j))
+            self.all_user_boxes.append(myLineEdit)
+            if j == 0:
+              self.emailEdits.append(myLineEdit)
+            else:
+              self.phoneEdits.append(myLineEdit)
 
         i = 0
         for j in range(2,num_shifters+2):
           for k in range(0,3):
-            self.gridLayout_4.addWidget(self.lineEdits[i], j, k, 1, 1)
+            self.gridLayout_4.addWidget(self.all_user_boxes[i], j, k, 1, 1)
             i += 1
 
         #self.lineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
@@ -189,6 +225,12 @@ class Ui_MainWindow(object):
         self.mwpcHCentreRefBox.valueChanged['int'].connect(MainWindow.mwpc_H_centre_changed)
         self.pushButton.clicked.connect(self.mwpcHCentreRefBox.update)
         self.pushButton.clicked.connect(self.mwpcHFwhmRefBox.update)
+        for line in self.emailEdits:
+          line.editingFinished.connect(MainWindow.user_email_changed)
+        for line in self.phoneEdits:
+          line.editingFinished.connect(MainWindow.user_phone_changed)
+
+
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -221,9 +263,16 @@ class Ui_MainWindow(object):
         e = 1
         p = 2
         for name in shifters:
-          self.lineEdits[n].setText(_translate("MainWindow", name))
-          self.lineEdits[e].setText(_translate("MainWindow", "eino.juhani.oltedal@cern.ch"))
-          self.lineEdits[p].setText(_translate("MainWindow", "004741760950"))
+          shifter_info = self.db_cmd.get_shifter_info(name)
+          if len(shifter_info) == 0:
+            email = ""
+            phone = ""
+          else:
+            email = shifter_info['email']
+            phone = str(shifter_info['phone'])
+          self.all_user_boxes[n].setText(_translate("MainWindow", name))
+          self.all_user_boxes[e].setText(_translate("MainWindow", email))
+          self.all_user_boxes[p].setText(_translate("MainWindow", phone))
           n += 3
           e += 3
           p += 3
