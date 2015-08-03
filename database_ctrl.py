@@ -1,3 +1,5 @@
+# Functions for interacting with the sqltie3 database
+
 import sqlite3
 
 #database  = '//cern.ch/dfs/Websites/t/test-charmShiftTool/data/charm_shift.db'
@@ -70,13 +72,16 @@ class db_commands:
       self.con.commit()
       self.close_db()
 
-    def set_current_shiter(self, name):
+    def set_current_shifter(self, name):
       current = self.get_current_shifter()
+      self.load_db()
       if current == None:
         self.cur.execute("update " + shifter_table + " set current=1 where name='"+name+"'")
       elif current != name:
         self.cur.execute("update " + shifter_table + " set current=0 where name='"+current+"'")
         self.cur.execute("update " + shifter_table + " set current=1 where name='"+name+"'")
+      self.con.commit()
+      self.close_db()
 
     def get_current_shifter(self):
       self.load_db()
@@ -84,6 +89,7 @@ class db_commands:
       shifter = self.cur.fetchone()
       if shifter != None:
         shifter = shifter[0]
+      self.close_db()
       return shifter
 
     def get_shifter_info(self, name):
@@ -94,6 +100,7 @@ class db_commands:
       shifter = self.cur.fetchone()
       if shifter != None:
         shifter = shifter[1:]
+      self.close_db()
       return shifter
 
     def get_setting(self, settingname):

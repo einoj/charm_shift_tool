@@ -47,6 +47,6 @@ t.testIfAsExpected('Insert Shifter', dbc.get_shifter_info('Maris'), shifter)
 t.testIfAsExpected('Insert Shifter', dbc.get_shifter_info('Spock'), None)
 
 t.testIfAsExpected('Set Shifter', dbc.get_current_shifter(), 'Maris')
-dbc.set_current_shiter('Eino')
+dbc.set_current_shifter('Eino')
 t.testIfAsExpected('Change Shifter', dbc.get_current_shifter(), 'Eino')
 t.print_stats()
