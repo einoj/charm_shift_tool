@@ -11,25 +11,6 @@ from PyQt5.QtCore import pyqtSignal
 from database_ctrl import db_commands
 from shifter import get_all_shifters
 
-class MyLineEdit(QtWidgets.QLineEdit):
-
-    # Define a new signal called 'trigger' that has no arguments.
-    trigger = pyqtSignal()
-
-    def connect_and_emit_trigger(self):
-        # Connect the trigger signal to a slot.
-        self.trigger.connect(self.handle_trigger)
-
-        # Emit the signal.
-        print("trigger signal received")
-        self.trigger.emit()
-
-    def handle_trigger(self):
-        # Show that the slot has been called.
-
-        print("trigger signal received")
-
-
 class Ui_MainWindow(object):
 
     def __init__(self):
@@ -65,8 +46,6 @@ class Ui_MainWindow(object):
         self.db_cmd.insert_setting(("mwpc_H_FWHM", 89))
         self.db_cmd.insert_setting(("mwpc_H_centre", 65))
 
-    def user_email_changed(self):
-        print(self.text())
 
     def user_phone_changed(self):
         print(self)
@@ -157,13 +136,16 @@ class Ui_MainWindow(object):
         self.all_user_boxes = []
         self.emailEdits = []
         self.phoneEdits = []
+        self.usernames = []
         num_shifters = len(get_all_shifters())
         for i in range(num_shifters):
+          print(i)
           myLabel = QtWidgets.QLabel(self.gridLayoutWidget_2) 
           myLabel.setObjectName("user_label_"+str(i))
           self.all_user_boxes.append(myLabel)
+          self.usernames.append(myLabel)
           for j in range(2):
-            myLineEdit = MyLineEdit(self.gridLayoutWidget_2)
+            myLineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
             myLineEdit.setObjectName("lineEdit_"+str(i+j))
             self.all_user_boxes.append(myLineEdit)
             if j == 0:
@@ -176,25 +158,6 @@ class Ui_MainWindow(object):
           for k in range(0,3):
             self.gridLayout_4.addWidget(self.all_user_boxes[i], j, k, 1, 1)
             i += 1
-
-        #self.lineEdit = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
-        #self.lineEdit.setObjectName("lineEdit")
-        #self.gridLayout_4.addWidget(self.lineEdit, 3, 0, 1, 1)
-        #self.lineEdit_3 = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
-        #self.lineEdit_3.setObjectName("lineEdit_3")
-        #self.gridLayout_4.addWidget(self.lineEdit_3, 3, 2, 1, 1)
-        #self.lineEdit_5 = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
-        #self.lineEdit_5.setObjectName("lineEdit_5")
-        #self.gridLayout_4.addWidget(self.lineEdit_5, 2, 2, 1, 1)
-        #self.lineEdit_6 = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
-        #self.lineEdit_6.setObjectName("lineEdit_6")
-        #self.gridLayout_4.addWidget(self.lineEdit_6, 3, 1, 1, 1)
-        #self.lineEdit_2 = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
-        #self.lineEdit_2.setObjectName("lineEdit_2")
-        #self.gridLayout_4.addWidget(self.lineEdit_2, 2, 1, 1, 1)
-        #self.lineEdit_4 = QtWidgets.QLineEdit(self.gridLayoutWidget_2)
-        #self.lineEdit_4.setObjectName("lineEdit_4")
-        #self.gridLayout_4.addWidget(self.lineEdit_4, 2, 0, 1, 1)
 
         self.label_10 = QtWidgets.QLabel(self.gridLayoutWidget_2)
         self.label_10.setAlignment(QtCore.Qt.AlignCenter)
@@ -226,23 +189,52 @@ class Ui_MainWindow(object):
         self.pushButton.clicked.connect(self.mwpcHCentreRefBox.update)
         self.pushButton.clicked.connect(self.mwpcHFwhmRefBox.update)
         for line in self.emailEdits:
-          line.editingFinished.connect(MainWindow.user_email_changed)
+          line.editingFinished.connect(self.user_email_changed)
         for line in self.phoneEdits:
-          line.editingFinished.connect(MainWindow.user_phone_changed)
+          line.editingFinished.connect(self.user_phone_changed)
 
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    def user_phone_changed(self):
+      sender = self.sender()
+      # Since the QLineEdits and user labels are labled 1,2,3...n
+      # We can use the senders name to find the user name stored in the user label
+      # This is very hacky, but I have spent too long trying to find
+      # the correct way to do it...
+      # Using split(_) because the name and number is devided by _ as in user_label_10
+      try:
+        idx = int(sender.objectName().split('_')[-1])-1
+      except ValuError:
+        print('Error! not a string')
+        idx = 0
+        return
+      name = self.usernames[idx].text()
+      phone = sender.text()
+      db_cmd = db_commands()
+      db_cmd.set_shifter_phone((name,phone))
+    
+    def user_email_changed(self):
+      sender = self.sender()
+      # Since the QLineEdits and user labels are labled 0,1,2...n
+      # We can use the senders name to find the user name stored in the user label
+      # This is very hacky, but I have spent too long trying to find
+      # the correct way to do it...
+      # Using split(_) because the name and number is devided by _ as in user_label_10
+      try:
+        idx = int(sender.objectName().split('_')[-1])
+      except ValuError:
+        print('Error! not a string')
+        idx = 0
+        return
+      name = self.usernames[idx].text()
+      email = sender.text()
+      db_cmd = db_commands()
+      db_cmd.set_shifter_email((name,email))
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.plainTextEdit.setPlainText(_translate("MainWindow", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit. Donec et mollis dolor. Praesent et diam eget libero egestas mattis sit amet vitae augue. Nam tincidunt congue enim, ut porta lorem lacinia consectetur. Donec ut libero sed arcu vehicula ultricies a non tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ut gravida lorem. Ut turpis felis, pulvinar a semper sed, adipiscing id dolor. Pellentesque auctor nisi id magna consequat sagittis. Curabitur dapibus enim sit amet elit pharetra tincidunt feugiat nisl imperdiet. Ut convallis libero in urna ultrices accumsan. Donec sed odio eros. Donec viverra mi quis quam pulvinar at malesuada arcu rhoncus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In rutrum accumsan ultricies. Mauris vitae nisi at sem facilisis semper ac in est.\n"
-"\n"
-"Vivamus fermentum semper porta. Nunc diam velit, adipiscing ut tristique vitae, sagittis vel odio. Maecenas convallis ullamcorper ultricies. Curabitur ornare, ligula semper consectetur sagittis, nisi diam iaculis velit, id fringilla sem nunc vel mi. Nam dictum, odio nec pretium volutpat, arcu ante placerat erat, non tristique elit urna et turpis. Quisque mi metus, ornare sit amet fermentum et, tincidunt et orci. Fusce eget orci a orci congue vestibulum. Ut dolor diam, elementum et vestibulum eu, porttitor vel elit. Curabitur venenatis pulvinar tellus gravida ornare. Sed et erat faucibus nunc euismod ultricies ut id justo. Nullam cursus suscipit nisi, et ultrices justo sodales nec. Fusce venenatis facilisis lectus ac semper. Aliquam at massa ipsum. Quisque bibendum purus convallis nulla ultrices ultricies. Nullam aliquam, mi eu aliquam tincidunt, purus velit laoreet tortor, viverra pretium nisi quam vitae mi. Fusce vel volutpat elit. Nam sagittis nisi dui.\n"
-"\n"
-"Suspendisse lectus leo, consectetur in tempor sit amet, placerat quis neque. Etiam luctus porttitor lorem, sed suscipit est rutrum non. Curabitur lobortis nisl a enim congue semper. Aenean commodo ultrices imperdiet. Vestibulum ut justo vel sapien venenatis tincidunt. Phasellus eget dolor sit amet ipsum dapibus condimentum vitae quis lectus. Aliquam ut massa in turpis dapibus convallis. Praesent elit lacus, vestibulum at malesuada et, ornare et est. Ut augue nunc, sodales ut euismod non, adipiscing vitae orci. Mauris ut placerat justo. Mauris in ultricies enim. Quisque nec est eleifend nulla ultrices egestas quis ut quam. Donec sollicitudin lectus a mauris pulvinar id aliquam urna cursus. Cras quis ligula sem, vel elementum mi. Phasellus non ullamcorper urna.\n"
-"\n"
-"Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In euismod ultrices facilisis. Vestibulum porta sapien adipiscing augue congue id pretium lectus molestie. Proin quis dictum nisl. Morbi id quam sapien, sed vestibulum sem. Duis elementum rutrum mauris sed convallis. Proin vestibulum magna mi. Aenean tristique hendrerit magna, ac facilisis nulla hendrerit ut. Sed non tortor sodales quam auctor elementum. Donec hendrerit nunc eget elit pharetra pulvinar. Suspendisse id tempus tortor. Aenean luctus, elit commodo laoreet commodo, justo nisi consequat massa, sed vulputate quam urna quis eros. Donec vel. "))
         self.label_2.setText(_translate("MainWindow", "Deviation before users are alerted [%]"))
         self.label_3.setText(_translate("MainWindow", "SEC reference [e10]"))
         self.label_4.setText(_translate("MainWindow", "MWPC vertical FWHM refrence"))

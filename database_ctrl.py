@@ -72,6 +72,36 @@ class db_commands:
       self.con.commit()
       self.close_db()
 
+    def set_shifter_email(self, data):
+      if len(data) !=2:
+        print("ERROR: shifter data must have length 4!")
+        return -1
+      self.load_db()
+      self.cur.execute("select rowid from " + shifter_table + " where name = ?",(data[0],))
+      row = self.cur.fetchone()
+      if row is None:
+        data += (0,0)
+        self.cur.execute("insert into " + shifter_table + "(name, email, phone, current)" " values(?,?,?,?)", data)
+      else:
+        self.cur.execute("update " + shifter_table + " set email=? where name=?",(data[1],data[0]))
+      self.con.commit()
+      self.close_db()
+
+    def set_shifter_phone(self, data):
+      if len(data) !=2:
+        print("ERROR: shifter data must have length 4!")
+        return -1
+      self.load_db()
+      self.cur.execute("select rowid from " + shifter_table + " where name = ?",(data[0],))
+      row = self.cur.fetchone()
+      if row is None:
+        data = (data[0],"",data[1],0)
+        self.cur.execute("insert into " + shifter_table + "(name, email, phone, current)" " values(?,?,?,?)", data)
+      else:
+        self.cur.execute("update " + shifter_table + " set phone=? where name=?",(data[1],data[0]))
+      self.con.commit()
+      self.close_db()
+
     def set_current_shifter(self, name):
       current = self.get_current_shifter()
       self.load_db()
