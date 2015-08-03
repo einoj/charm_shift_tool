@@ -96,7 +96,6 @@ class db_commands:
       if current == None:
         self.cur.execute("update " + shifter_table + " set current=1 where name='"+name+"'")
       elif current != name:
-        print(current+"ss")
         self.cur.execute("update " + shifter_table + " set current=0 where name='"+current+"'")
         self.cur.execute("update " + shifter_table + " set current=1 where name='"+name+"'")
 
@@ -106,6 +105,16 @@ class db_commands:
       shifter = self.cur.fetchone()
       if shifter != None:
         shifter = shifter[0]
+      return shifter
+
+    def get_shifter_info(self, name):
+      if type(name) != str:
+        print("Argument of get_shifter_info() should be string representing name of shifter")
+      self.load_db()
+      self.cur.execute("select * from " + shifter_table + " where name='" + name + "'")
+      shifter = self.cur.fetchone()
+      if shifter != None:
+        shifter = shifter[1:]
       return shifter
 
     def get_setting(self, settingname):
