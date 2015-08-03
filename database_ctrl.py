@@ -98,10 +98,14 @@ class db_commands:
       self.load_db()
       self.cur.execute("select * from " + shifter_table + " where name='" + name + "'")
       shifter = self.cur.fetchone()
-      if shifter != None:
-        shifter = shifter[1:]
       self.close_db()
-      return shifter
+      shifter_dict = {}
+      if shifter != None:
+        shifter_dict['name'] = shifter[1]
+        shifter_dict['email'] = shifter[2]
+        shifter_dict['phone'] = shifter[3]
+        shifter_dict['current'] = shifter[4]
+      return shifter_dict
 
     def get_setting(self, settingname):
       if type(settingname) != str:
