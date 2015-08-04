@@ -134,7 +134,14 @@ class db_commands:
       #$ python -mtimeit -s 'l=[[1,2,3],[4,5,6], [7], [8,9]]*99' 'list(itertools.chain.from_iterable(l))'
       #10000 loops, best of 3: 34.8 usec per loop
       alertees = list(chain.from_iterable(alertees))
+      self.close_db()
       return alertees
+
+    def set_alertee(self,name):
+      self.load_db()
+      self.cur.execute("update " + shifter_table + " set alert=1 where name=?",(name,))
+      self.con.commit()
+      self.close_db()
 
     def get_shifter_info(self, name):
       if type(name) != str:

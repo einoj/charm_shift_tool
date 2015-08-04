@@ -42,7 +42,7 @@ shifter = {'name':'Eino', 'email':'eino.juhani.oltedal@cern.ch','phone':47417609
 dbc.insert_shifter(shifter)
 print(dbc.get_shifter_info('Eino').values())
 t.testIfAsExpected('Insert Shifter', dbc.get_shifter_info('Eino'), shifter)
-shifter = {'name':'Maris', 'email':'maris.tali@cern.ch','phone':9999999999,'current':1,'alert':1}
+shifter = {'name':'Maris', 'email':'maris.tali@cern.ch','phone':9999999999,'current':1,'alert':0}
 dbc.insert_shifter(shifter)
 t.testIfAsExpected('Insert Shifter', dbc.get_shifter_info('Maris'), shifter)
 t.testIfAsExpected('Insert Shifter', dbc.get_shifter_info('Spock'), {})
@@ -51,6 +51,9 @@ t.testIfAsExpected('Set Shifter', dbc.get_current_shifter(), 'Maris')
 dbc.set_current_shifter('Eino')
 t.testIfAsExpected('Change Shifter', dbc.get_current_shifter(), 'Eino')
 
+t.testIfAsExpected('Get Alertees', dbc.get_alerts(), ['Eino'])
+dbc.set_alertee('Maris')
 t.testIfAsExpected('Get Alertees', dbc.get_alerts(), ['Eino','Maris'])
+dbc.set_alertee('Spock')
 
 t.print_stats()
