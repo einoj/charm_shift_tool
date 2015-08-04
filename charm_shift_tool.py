@@ -142,6 +142,15 @@ def running():
     last_msg = dbc.get_last_msg()
     response = dbc.get_response()
 
+    alertees = dbc.get_alerts()
+    recipients = []
+    if shifter not in alertees:
+      recipients.append(dbc.get_shifter_info(shifter)['email'])
+    for name in alertees:
+      recipients.append(dbc.get_shifter_info(name)['email'])
+    
+    #alert('text', 'text', 'charm_shift_tool@cern.ch', recipients)
+
     #check only SEC for intensity
     sec_msg = check_SEC()
     if sec_msg != '':
@@ -173,6 +182,7 @@ def running():
         if warn_email or warn_fwhm_email or warn_centre_email:
             alert(subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
             dbc.insert_msg((t_now, whole_msg, 1*warn_email, 1*warn_fwhm_email, 1*warn_centre_email))
+            dbc.respond(0)
     else:
       if last_msg[-3] == 1:
         if warn_email:
