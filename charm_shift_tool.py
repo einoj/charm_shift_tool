@@ -138,7 +138,7 @@ def running():
 
     dbc = db_commands()
     shifter = get_shifter()
-    dbc.insert_shifter(shifter)
+    dbc.set_current_shifter(shifter)
     last_msg = dbc.get_last_msg()
     response = dbc.get_response()
 

@@ -18,6 +18,7 @@
 - [X] Intensity of beam, from SEC 1
 - [X] Check centering of the beam for BPM and MWPC
 - [X] Should be checking beam intensity first, but it doesn't
+- [ ] Response is not set to 0 when beam goes down, fix it.
 
 * TODO Data retrival [9/10]
 - [X] Write code to download BPM data from https://ps-irrad.web.cern.ch/irrad/bpm.php
