@@ -46,10 +46,6 @@ class Ui_MainWindow(object):
         self.db_cmd.insert_setting(("mwpc_H_FWHM", 89))
         self.db_cmd.insert_setting(("mwpc_H_centre", 65))
 
-
-    def user_phone_changed(self):
-        print(self)
-
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1024, 908)
@@ -132,14 +128,18 @@ class Ui_MainWindow(object):
         self.label_8.setAlignment(QtCore.Qt.AlignCenter)
         self.label_8.setObjectName("label_8")
         self.gridLayout_4.addWidget(self.label_8, 0, 0, 1, 1)
+        self.label_13 = QtWidgets.QLabel(self.gridLayoutWidget_2)
+        self.label_13.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_13.setObjectName("label_13")
+        self.gridLayout_4.addWidget(self.label_13, 0, 3, 1, 1)
 
         self.all_user_boxes = []
         self.emailEdits = []
         self.phoneEdits = []
         self.usernames = []
+        self.alert_checkboxes = []
         num_shifters = len(get_all_shifters())
         for i in range(num_shifters):
-          print(i)
           myLabel = QtWidgets.QLabel(self.gridLayoutWidget_2) 
           myLabel.setObjectName("user_label_"+str(i))
           self.all_user_boxes.append(myLabel)
@@ -152,10 +152,15 @@ class Ui_MainWindow(object):
               self.emailEdits.append(myLineEdit)
             else:
               self.phoneEdits.append(myLineEdit)
+          checkBox = QtWidgets.QCheckBox(self.gridLayoutWidget_2)
+          checkBox.setText("")
+          checkBox.setObjectName("checkBox_"+str(i))
+          self.all_user_boxes.append(checkBox)
+          self.alert_checkboxes.append(checkBox)
 
         i = 0
         for j in range(2,num_shifters+2):
-          for k in range(0,3):
+          for k in range(0,4):
             self.gridLayout_4.addWidget(self.all_user_boxes[i], j, k, 1, 1)
             i += 1
 
@@ -192,9 +197,25 @@ class Ui_MainWindow(object):
           line.editingFinished.connect(self.user_email_changed)
         for line in self.phoneEdits:
           line.editingFinished.connect(self.user_phone_changed)
-
+        for box in self.alert_checkboxes:
+          box.clicked['bool'].connect(self.alert_checked)
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def alert_checked(self, state):
+      sender = self.sender()
+      try:
+        idx = int(sender.objectName().split('_')[-1])
+      except ValuError:
+        print('Error! not a string')
+        idx = 0
+        return
+      name = self.usernames[idx].text()
+      #email = self.emailEdits[idx].text()
+      #phone = self.phoneEdits[idx].text()
+      alert = state*1 # convert True, False to 1, 0
+      db_cmd = db_commands()
+      db_cmd.set_alert((name,alert))
 
     def user_phone_changed(self):
       sender = self.sender()
@@ -246,11 +267,11 @@ class Ui_MainWindow(object):
         self.label_8.setText(_translate("MainWindow", "User Name"))
         self.label_10.setText(_translate("MainWindow", "Phone number"))
         self.label_9.setText(_translate("MainWindow", "Email"))
+        self.label_13.setText(_translate("MainWindow", "Alert"))
 
         shifters = get_all_shifters()
         shifters = sorted(shifters, key=str.lower)
         num_shifters = len(shifters)
-        print(shifters) 
         n = 0
         e = 1
         p = 2
@@ -265,8 +286,8 @@ class Ui_MainWindow(object):
           self.all_user_boxes[n].setText(_translate("MainWindow", name))
           self.all_user_boxes[e].setText(_translate("MainWindow", email))
           self.all_user_boxes[p].setText(_translate("MainWindow", phone))
-          n += 3
-          e += 3
-          p += 3
+          n += 4
+          e += 4
+          p += 4
 
 

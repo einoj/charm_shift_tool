@@ -137,9 +137,18 @@ class db_commands:
       self.close_db()
       return alertees
 
-    def set_alertee(self,name):
+    def set_alert(self,data):
+      if len(data) !=2:
+        print("ERROR: set_alert must have length 2!")
+        return -1
       self.load_db()
-      self.cur.execute("update " + shifter_table + " set alert=1 where name=?",(name,))
+      self.cur.execute("select rowid from " + shifter_table + " where name = ?",(data[0],))
+      row = self.cur.fetchone()
+      if row is None:
+        data = (data[0],"","",0,data[1])
+        self.cur.execute("insert into " + shifter_table + "(name, email, phone, current, alert)" " values(?,?,?,?,?)", data)
+      else:
+        self.cur.execute("update " + shifter_table + " set alert=? where name=?",[data[1],data[0]])
       self.con.commit()
       self.close_db()
 

@@ -52,8 +52,8 @@ dbc.set_current_shifter('Eino')
 t.testIfAsExpected('Change Shifter', dbc.get_current_shifter(), 'Eino')
 
 t.testIfAsExpected('Get Alertees', dbc.get_alerts(), ['Eino'])
-dbc.set_alertee('Maris')
+dbc.set_alert(('Maris',1))
 t.testIfAsExpected('Get Alertees', dbc.get_alerts(), ['Eino','Maris'])
-dbc.set_alertee('Spock')
+dbc.set_alert(('Spock',1))
 
 t.print_stats()

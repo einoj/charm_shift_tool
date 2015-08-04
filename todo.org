@@ -8,8 +8,10 @@
 - [ ] Option to set when a day starts and ends, for example 1400 to 0200
 - [ ] option for maximum number of sms sent.
 - [X] The program should keep sending notifications until the user accepts the reply
+- [ ] Automatic resize of admin interface
+- [ ] Look into removing set shifter functions and only use insert_shifter instad
 
-* TODO Message Contents [7/8]
+* TODO Message Contents [7/9]
 - [ ] How long has the beam been down
 - [X] Mean intensity of the BPM 
 - [X] Mean intensity of the MWPC

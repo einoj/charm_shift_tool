@@ -232,6 +232,30 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
      <item row="2" column="1">
       <widget class="QLineEdit" name="lineEdit_2"/>
      </item>
+     <item row="2" column="3">
+      <widget class="QCheckBox" name="checkBox">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLabel" name="label_13">
+       <property name="text">
+        <string>Alert</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QCheckBox" name="checkBox_2">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -422,6 +446,22 @@ Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
     <hint type="destinationlabel">
      <x>91</x>
      <y>857</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>user_email_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1011</x>
+     <y>804</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1002</x>
+     <y>876</y>
     </hint>
    </hints>
   </connection>
