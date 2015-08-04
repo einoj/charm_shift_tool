@@ -12,9 +12,9 @@ class Tester():
   def testIfAsExpected(self, test, value, expected):
     if self.tests == 0:
       print()
-      print("==================================================================================================")
+      print("==================================================================================================================================================")
       print("== Starting testing.")
-      print("==================================================================================================")
+      print("==================================================================================================================================================")
     self.tests += 1
     if value == expected:
       msg = str(value)+", "
@@ -23,13 +23,13 @@ class Tester():
       self.errors += 1
       msg = "Actual value " + str(value) + ", expected value: " + str(expected)
       result = "FAIL"
-    print("== Testing {t:<15} {m:<60} {r:s}".format(t=test+":",m=msg,r=result))
+    print("== Testing {t:<15} {m:<110} {r:s}".format(t=test+":",m=msg,r=result))
 
   def print_stats(self):
     print()
-    print("==================================================================================================")
+    print("==================================================================================================================================================")
     print("== Test Results.")
-    print("==================================================================================================")
+    print("==================================================================================================================================================")
     print("== Ran " + str(self.tests) + " test(s).")
     print("== Failed " + str(self.errors) + " test(s).")
     print("== " + str(100-self.errors/self.tests*100) + "% of the tests executed correctly.")
@@ -38,15 +38,19 @@ dbc = db_commands()
 t = Tester()
 
 # test shifter functions
-shifter = ('Eino','eino.juhani.oltedal@cern.ch',4741760950,0)
+shifter = {'name':'Eino', 'email':'eino.juhani.oltedal@cern.ch','phone':4741760950,'current':0,'alert':1}
 dbc.insert_shifter(shifter)
+print(dbc.get_shifter_info('Eino').values())
 t.testIfAsExpected('Insert Shifter', dbc.get_shifter_info('Eino'), shifter)
-shifter = ('Maris','maris.tali@cern.ch',9999999999,1)
+shifter = {'name':'Maris', 'email':'maris.tali@cern.ch','phone':9999999999,'current':1,'alert':1}
 dbc.insert_shifter(shifter)
 t.testIfAsExpected('Insert Shifter', dbc.get_shifter_info('Maris'), shifter)
-t.testIfAsExpected('Insert Shifter', dbc.get_shifter_info('Spock'), None)
+t.testIfAsExpected('Insert Shifter', dbc.get_shifter_info('Spock'), {})
 
 t.testIfAsExpected('Set Shifter', dbc.get_current_shifter(), 'Maris')
 dbc.set_current_shifter('Eino')
 t.testIfAsExpected('Change Shifter', dbc.get_current_shifter(), 'Eino')
+
+t.testIfAsExpected('Get Alertees', dbc.get_alerts(), ['Eino','Maris'])
+
 t.print_stats()

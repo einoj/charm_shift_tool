@@ -1,6 +1,7 @@
 # Functions for interacting with the sqltie3 database
 
 import sqlite3
+from itertools import chain
 
 #database  = '//cern.ch/dfs/Websites/t/test-charmShiftTool/data/charm_shift.db'
 database = './charm_shift.db'
@@ -26,7 +27,7 @@ class db_commands:
         self.cur.execute('create table if not exists ' + msg_table + ' (id INTEGER PRIMARY KEY, time text, msg text, status int, fwhm int, centre int)')
         #self.cur.execute('create table if not exists ' + status_table + ' (id INTEGER PRIMARY KEY, text, msg text, status int)')
         self.cur.execute('create table if not exists ' + response_table + ' (id INTEGER PRIMARY KEY, name text, status int)')
-        self.cur.execute('create table if not exists ' + shifter_table + ' (id INTEGER PRIMARY KEY, name text, email text, phone int, current int)')
+        self.cur.execute('create table if not exists ' + shifter_table + ' (id INTEGER PRIMARY KEY, name text, email text, phone int, current int, alert int)')
         self.con.commit()
         self.close_db()
 
@@ -59,16 +60,16 @@ class db_commands:
       self.close_db()
 
     def insert_shifter(self, data):
-      if len(data) != 4:
+      if len(data) != 5:
         print("ERROR: shifter data must have length 4!")
         return -1
       self.load_db()
-      self.cur.execute("select rowid from " + shifter_table + " where name = ?",(data[0],))
+      self.cur.execute("select rowid from " + shifter_table + " where name = ?",[data['name'],])
       row = self.cur.fetchone()
       if row is None:
-        self.cur.execute("insert into " + shifter_table + "(name, email, phone, current)" " values(?,?,?,?)", data)
+        self.cur.execute("insert into " + shifter_table + "(name, email, phone, current, alert)" " values(?,?,?,?,?)", [data['name'],data['email'],data['phone'],data['current'],data['alert']])
       else:
-        self.cur.execute("update " + shifter_table + " set email=?, phone=?, current=? where name=?",(data[1],data[2],data[3],data[0]))
+        self.cur.execute("update " + shifter_table + " set email=?, phone=?, current=?, alert=? where name=?",[data['email'],data['phone'],data['current'],data['alert'],data['name']])
       self.con.commit()
       self.close_db()
 
@@ -80,8 +81,8 @@ class db_commands:
       self.cur.execute("select rowid from " + shifter_table + " where name = ?",(data[0],))
       row = self.cur.fetchone()
       if row is None:
-        data += (0,0)
-        self.cur.execute("insert into " + shifter_table + "(name, email, phone, current)" " values(?,?,?,?)", data)
+        data += (0,0,0)
+        self.cur.execute("insert into " + shifter_table + "(name, email, phone, current, alert)" " values(?,?,?,?,?)", data)
       else:
         self.cur.execute("update " + shifter_table + " set email=? where name=?",(data[1],data[0]))
       self.con.commit()
@@ -95,8 +96,8 @@ class db_commands:
       self.cur.execute("select rowid from " + shifter_table + " where name = ?",(data[0],))
       row = self.cur.fetchone()
       if row is None:
-        data = (data[0],"",data[1],0)
-        self.cur.execute("insert into " + shifter_table + "(name, email, phone, current)" " values(?,?,?,?)", data)
+        data = (data[0],"",data[1],0,0)
+        self.cur.execute("insert into " + shifter_table + "(name, email, phone, current, alert)" " values(?,?,?,?,?)", data)
       else:
         self.cur.execute("update " + shifter_table + " set phone=? where name=?",(data[1],data[0]))
       self.con.commit()
@@ -122,6 +123,19 @@ class db_commands:
       self.close_db()
       return shifter
 
+    def get_alerts(self):
+      self.load_db()
+      self.cur.execute("select name from " + shifter_table + " where alert=1")
+      alertees = self.cur.fetchall()
+      # Tested two methods of flatting lists
+      #$ python -mtimeit -s'l=[[1,2,3],[4,5,6], [7], [8,9]]*99' '[item for sublist in l for item in sublist]'
+      #10000 loops, best of 3: 62.6 usec per loop
+      #
+      #$ python -mtimeit -s 'l=[[1,2,3],[4,5,6], [7], [8,9]]*99' 'list(itertools.chain.from_iterable(l))'
+      #10000 loops, best of 3: 34.8 usec per loop
+      alertees = list(chain.from_iterable(alertees))
+      return alertees
+
     def get_shifter_info(self, name):
       if type(name) != str:
         print("Argument of get_shifter_info() should be string representing name of shifter")
@@ -135,6 +149,7 @@ class db_commands:
         shifter_dict['email'] = shifter[2]
         shifter_dict['phone'] = shifter[3]
         shifter_dict['current'] = shifter[4]
+        shifter_dict['alert'] = shifter[5]
       return shifter_dict
 
     def get_setting(self, settingname):
