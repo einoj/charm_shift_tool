@@ -120,6 +120,11 @@ def check_SEC():
     msg =  'SEC1 intesity: ' + str(intensity) + ' reference: ' + str(intensity)
   return msg
 
+def phone2email(number):
+sms_address = '004175411{}@mail2sms.cern.ch'
+if len(number) == 4:
+  sms_address.format(7164)
+
 def running():
 
   while True:
