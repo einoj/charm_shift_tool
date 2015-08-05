@@ -122,11 +122,11 @@ def check_SEC():
 
 def phone2email(number):
   sms_address = '004175411{}@mail2sms.cern.ch'
-  if number == ''
+  if number == '':
     sms_address = number
   elif len(number) == 4:
     sms_address = sms_address.format(7164)
-  else
+  else:
     number = number.replace('+','00')
     sms_address = '{}@mail2sms.cern.ch'.format(number)
   return sms_address
