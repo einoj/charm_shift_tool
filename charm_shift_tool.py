@@ -121,9 +121,15 @@ def check_SEC():
   return msg
 
 def phone2email(number):
-sms_address = '004175411{}@mail2sms.cern.ch'
-if len(number) == 4:
-  sms_address.format(7164)
+  sms_address = '004175411{}@mail2sms.cern.ch'
+  if number == ''
+    sms_address = number
+  elif len(number) == 4:
+    sms_address = sms_address.format(7164)
+  else
+    number = number.replace('+','00')
+    sms_address = '{}@mail2sms.cern.ch'.format(number)
+  return sms_address
 
 def running():
 
@@ -150,9 +156,15 @@ def running():
     alertees = dbc.get_alerts()
     recipients = []
     if shifter not in alertees:
-      recipients.append(dbc.get_shifter_info(shifter)['email'])
+      shifter_info = dbc.get_shifter_info(shifter)
+      recipients.append(shifter_info['email'])
+      sms = phone2email(shifter_info['phone'])
+      recipients.append(sms)
     for name in alertees:
-      recipients.append(dbc.get_shifter_info(name)['email'])
+      shifter_info = dbc.get_shifter_info(shifter)
+      recipients.append(shifter_info['email'])
+      sms = phone2email(shifter_info['phone'])
+      recipients.append(sms)
     
     #alert('text', 'text', 'charm_shift_tool@cern.ch', recipients)
 
@@ -195,22 +207,22 @@ def running():
             alert(subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
             dbc.insert_msg((t_now, whole_msg, 0, 0, 0))
             dbc.respond(0)
-        else:
-            # FWHM too large or Centre off
-            if (warn_fwhm_email and last_msg[-2] == 1) or (warn_centre_email and last_msg[-1] == 1):
-                alert(subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
-                dbc.insert_msg((t_now, whole_msg, 1, 1*warn_fwhm_email, 1*warn_centre_email))
-                dbc.respond(0)
-            # FWHM and Centre back to normal
-            elif (warn_fwhm_email == False and last_msg[-2] == 0) and (warn_centre_email == False and last_msg[-1] == 0):
-                alert('Notic Beam Centered and FWHM Normal', whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
-                dbc.insert_msg((t_now, whole_msg, 1, 1, 1))
-                dbc.respond(1)
       elif last_msg[-3] == 0 and warn_email == False:
           # Beam is now up again
           alert("Notice CHARM beam is up again", "Beam up again at " + t_now, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
           dbc.insert_msg((t_now, "Beam up again.", 1,1*warn_fwhm_email,1*warn_centre_email))
           dbc.respond(1)
+      elif (warn_fwhm_email == False and last_msg[-2] == 0) and (warn_centre_email == False and last_msg[-1] == 0):
+          alert('Notic Beam Centered and FWHM Normal', whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+          dbc.insert_msg((t_now, whole_msg, 1, 1, 1))
+          dbc.respond(1)
+      elif last_msg[-2] == 1 or last_msg[-1] == 1:
+          # FWHM too large or Centre off
+          if (warn_fwhm_email and last_msg[-2] == 1) or (warn_centre_email and last_msg[-1] == 1):
+              alert(subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+              dbc.insert_msg((t_now, whole_msg, 1, 1*(not warn_fwhm_email), 1*(not warn_centre_email)))
+              dbc.respond(0)
+          # FWHM and Centre back to normal
       elif ((last_msg[-3] == 0 or last_msg[-2] == 0 or last_msg[-1] == 0) and response == (0,)):
         #Keep sending messages until user responds
         alert('Resending ' + subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
