@@ -104,6 +104,14 @@ class db_commands:
       self.close_db()
 
     def set_current_shifter(self, name):
+      self.load_db()
+      self.cur.execute("select rowid from " + shifter_table + " where name = ?",[name])
+      row = self.cur.fetchone()
+      if row is None:
+        # Shifter does not exist in database, so create him
+        # This wont send emails to them, but will allow displaying their name in the web interface
+        data = {'name':name,'email':'','phone':'','current':0,'alert':0}
+        self.insert_shifter(data)
       current = self.get_current_shifter()
       self.load_db()
       if current == None:
@@ -166,6 +174,12 @@ class db_commands:
         shifter_dict['phone'] = shifter[3]
         shifter_dict['current'] = shifter[4]
         shifter_dict['alert'] = shifter[5]
+      else:
+        shifter_dict['name']    = ""  
+        shifter_dict['email']   = ""  
+        shifter_dict['phone']   = ""  
+        shifter_dict['current'] = "" 
+        shifter_dict['alert']   = "" 
       return shifter_dict
 
     def get_setting(self, settingname):

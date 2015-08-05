@@ -1,4 +1,4 @@
-* TODO User interface [5/9]
+* TODO User interface [5/15]
 - [X] Setting for amount of time the beam is down before a message is sent
 - [X] Setting for how much the intesity has to increase/decrease before a message is sent
 - [X] Setting for how much the dose rate per hour has to change before a message is sent
@@ -10,7 +10,12 @@
 - [X] The program should keep sending notifications until the user accepts the reply
 - [ ] Automatic resize of admin interface
 - [ ] Look into removing set shifter functions and only use insert_shifter instad
+- [ ] Automatically load the check box values
+- [ ] add setting for bpm references
+- [ ] add password 
+- [ ] make it possible to launch the admin interface from the webpage
 
+  
 * TODO Message Contents [7/9]
 - [ ] How long has the beam been down
 - [X] Mean intensity of the BPM 
@@ -21,7 +26,7 @@
 - [X] Check centering of the beam for BPM and MWPC
 - [X] Should be checking beam intensity first, but it doesn't
 - [ ] Response is not set to 0 when beam goes down, fix it.
-
+  
 * TODO Data retrival [9/10]
 - [X] Write code to download BPM data from https://ps-irrad.web.cern.ch/irrad/bpm.php
 - [X] Write regex to extract data from the html downloaded in the point above.
@@ -86,6 +91,9 @@
   It took an hour after the beam went down for the average to go low enough.
   If we just use fifteen samples the average count should be around 240000, and even if two of the last fifeen samples are 0
   the average will not drop lower than 70% of 240000. This should be a setting in the 
+- [ ] Angle problem. Should send message if bpms are off for more than 10 to 20 spills. do 10 to 20 spills
+  because the bpms are often off for a couple off spills, depending on what experiment that gets beam
+  before a spill is sent to charm the delta time for changing magnets settings can be too large.
   
 
 
