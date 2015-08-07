@@ -122,6 +122,7 @@ def check_SEC():
 
 def phone2email(number):
   sms_address = '004175411{}@mail2sms.cern.ch'
+  number = str(number)
   if number == '':
     sms_address = number
   elif len(number) == 4:
@@ -161,13 +162,11 @@ def running():
       sms = phone2email(shifter_info['phone'])
       recipients.append(sms)
     for name in alertees:
-      shifter_info = dbc.get_shifter_info(shifter)
+      shifter_info = dbc.get_shifter_info(name)
       recipients.append(shifter_info['email'])
       sms = phone2email(shifter_info['phone'])
       recipients.append(sms)
     
-    #alert('text', 'text', 'charm_shift_tool@cern.ch', recipients)
-
     #check only SEC for intensity
     sec_msg = check_SEC()
     if sec_msg != '':
@@ -197,43 +196,43 @@ def running():
     
     if last_msg is None:
         if warn_email or warn_fwhm_email or warn_centre_email:
-            alert(subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+            alert(subject, whole_msg, 'charm_shift_tool@cern.ch', recipients)
             dbc.insert_msg((t_now, whole_msg, 1*warn_email, 1*warn_fwhm_email, 1*warn_centre_email))
             dbc.respond(0)
     else:
       if last_msg[-3] == 1 and warn_email:
         print(1)
         # If there is a warn_email, everything is down
-        alert(subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+        alert(subject, whole_msg, 'charm_shift_tool@cern.ch', recipients)
         dbc.insert_msg((t_now, whole_msg, 0, 0, 0))
         dbc.respond(0)
       elif last_msg[-3] == 0 and warn_email == False:
         print(2)
         # Beam is now up again
-        alert("Notice CHARM beam is up again", "Beam up again at " + t_now, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+        alert("Notice CHARM beam is up again", "Beam up again at " + t_now, 'charm_shift_tool@cern.ch', recipients)
         dbc.insert_msg((t_now, "Beam up again.", 1,1*warn_fwhm_email,1*warn_centre_email))
         dbc.respond(1)
       elif (warn_fwhm_email == False and last_msg[-2] == 0) and (warn_centre_email == False and last_msg[-1] == 0):
         print(3)
-        alert('Notic Beam Centered and FWHM Normal', whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+        alert('Notic Beam Centered and FWHM Normal', whole_msg, 'charm_shift_tool@cern.ch', recipients)
         dbc.insert_msg((t_now, whole_msg, 1, 1, 1))
         dbc.respond(1)
       elif last_msg[-2] == 1 or last_msg[-1] == 1:
         print(4)
         # FWHM too large or Centre off
         if (warn_fwhm_email and last_msg[-2] == 1) or (warn_centre_email and last_msg[-1] == 1):
-          alert(subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+          alert(subject, whole_msg, 'charm_shift_tool@cern.ch', recipients)
           dbc.insert_msg((t_now, whole_msg, 1, 1*(not warn_fwhm_email), 1*(not warn_centre_email)))
           dbc.respond(0)
           # FWHM and Centre back to normal
         elif ((last_msg[-3] == 0 or last_msg[-2] == 0 or last_msg[-1] == 0) and response == (0,)):
           print(5)
           #Keep sending messages until user responds
-          alert('Resending ' + subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+          alert('Resending ' + subject, whole_msg, 'charm_shift_tool@cern.ch', recipients)
       elif ((last_msg[-3] == 0 or last_msg[-2] == 0 or last_msg[-1] == 0) and response == (0,)):
         print(5)
         #Keep sending messages until user responds
-        alert('Resending ' + subject, whole_msg, 'charm_shift_tool@cern.ch', 'eino.juhani.oltedal@cern.ch')
+        alert('Resending ' + subject, whole_msg, 'charm_shift_tool@cern.ch', recipients)
 
     del dbc
     print(whole_msg)
