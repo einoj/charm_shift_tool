@@ -131,6 +131,14 @@ class db_commands:
       self.close_db()
       return shifter
 
+    def get_all_shifters(self):
+      self.load_db()
+      self.cur.execute("select name from " + shifter_table)
+      shifters = self.cur.fetchall()
+      self.close_db()
+      shifters = list(chain.from_iterable(shifters))
+      return shifters
+
     def get_alerts(self):
       self.load_db()
       self.cur.execute("select name from " + shifter_table + " where alert=1")
@@ -161,8 +169,6 @@ class db_commands:
       self.close_db()
 
     def get_shifter_info(self, name):
-      if type(name) != str:
-        print("Argument of get_shifter_info() should be string representing name of shifter")
       self.load_db()
       self.cur.execute("select * from " + shifter_table + " where name='" + name + "'")
       shifter = self.cur.fetchone()
