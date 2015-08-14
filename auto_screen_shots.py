@@ -45,7 +45,7 @@ def sec_screens():
     savefig('//cern.ch/dfs/Websites/t/test-charmShiftTool/screens/sec.png', dpi=220)
 
 def web_screens():
-  p = subprocess.Popen('./phantomjs.exe ./user_tools/auto_logger.js', stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+  p = subprocess.Popen('./phantomjs.exe ./auto_logger.js', stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 if __name__ == "__main__":
   directory = '//cern.ch/dfs/Websites/t/test-charmShiftTool/screens/'
