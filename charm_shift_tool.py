@@ -4,6 +4,7 @@ from database_ctrl import *
 from email_tools import alert
 from database_ctrl import db_commands
 from shifter import get_shifter, get_date, get_all_shifters
+from shift_tool_constants import whole_msg, new_shifter_msg
 import time
 import urllib
 
@@ -171,9 +172,9 @@ def running():
       dbc.set_current_shifter(shifter)
       shifttime=1400
       date,tomorrow = get_date(shifttime)
-      new_shifter_msg = 'Hi {shifter:s},\n\nYou are the CHARM shifter from {date:s} {shifttime:d} until {tomorrow:s} {shifttime:d}.\nBeam info can be found at https://test-charmshifttool.web.cern.ch/test-charmShiftTool/cgi-bin/tool.py\nTo learn more about the shift tool read the document at \\\cern.ch\dfs\Projects\R2E\CHARM\Shifts\Shift Procedure v2.docx\n\nCheers,\nCHARMShiftTool'.format(shifter=shifter, date=date, tomorrow=tomorrow, shifttime=shifttime)
-      print(new_shifter_msg)
-      alert('New CHARM shifter {:s}'.format(shifter), new_shifter_msg, 'charm_shift_tool@cern.ch', recipients)
+      shifter_msg = new_shifter_msg.format(shifter=shifter, date=date, tomorrow=tomorrow, shifttime=shifttime)
+      print(shifter_msg)
+      alert('New CHARM shifter {:s}'.format(shifter), shifter_msg, 'charm_shift_tool@cern.ch', recipients)
     
     #check only SEC for intensity
     sec_msg = check_SEC()
@@ -199,13 +200,11 @@ def running():
     t_now = (datetime.now()).strftime(tf)
 
     # Only send message if we haven't already
-    whole_msg = 'SEC INFO\n----------------------------------------\n\n'+sec_msg+'\n\nBPM INFO\n----------------------------------------\n\nX-AXIS\n\n'\
-    + xmsg + '\nY-AXIS\n\n' + ymsg + '\n\nMWPC INFO\n----------------------------------------\n\n'+centre_msg+fwhm_msg
-    
+    alert_msg = whole_msg.format(sec=sec_msg, x=xmsg, y=ymsg, centre=centre_msg, fwhm=fwhm_msg)    
     if last_msg is None:
         if warn_email or warn_fwhm_email or warn_centre_email:
-            alert(subject, whole_msg, 'charm_shift_tool@cern.ch', recipients)
-            dbc.insert_msg((t_now, whole_msg, 1*warn_email, 1*warn_fwhm_email, 1*warn_centre_email))
+            alert(subject, alert_msg, 'charm_shift_tool@cern.ch', recipients)
+            dbc.insert_msg((t_now, alert_msg, 1*warn_email, 1*warn_fwhm_email, 1*warn_centre_email))
             dbc.respond(0)
     
     # Send the alerts if there is something wrong or if th ebeam is up again.
@@ -213,8 +212,8 @@ def running():
       if last_msg[-3] == 1 and warn_email:
         print(1)
         # If there is a warn_email, everything is down
-        alert(subject, whole_msg, 'charm_shift_tool@cern.ch', recipients)
-        dbc.insert_msg((t_now, whole_msg, 0, 0, 0))
+        alert(subject, alert_msg, 'charm_shift_tool@cern.ch', recipients)
+        dbc.insert_msg((t_now, alert_msg, 0, 0, 0))
         dbc.respond(0)
       elif last_msg[-3] == 0 and warn_email == False:
         print(2)
@@ -224,28 +223,28 @@ def running():
         dbc.respond(1)
       elif (warn_fwhm_email == False and last_msg[-2] == 0) and (warn_centre_email == False and last_msg[-1] == 0):
         print(3)
-        alert('Notic Beam Centered and FWHM Normal', whole_msg, 'charm_shift_tool@cern.ch', recipients)
-        dbc.insert_msg((t_now, whole_msg, 1, 1, 1))
+        alert('Notic Beam Centered and FWHM Normal', alert_msg, 'charm_shift_tool@cern.ch', recipients)
+        dbc.insert_msg((t_now, alert_msg, 1, 1, 1))
         dbc.respond(1)
       elif last_msg[-2] == 1 or last_msg[-1] == 1:
         print(4)
         # FWHM too large or Centre off
         if (warn_fwhm_email and last_msg[-2] == 1) or (warn_centre_email and last_msg[-1] == 1):
-          alert(subject, whole_msg, 'charm_shift_tool@cern.ch', recipients)
-          dbc.insert_msg((t_now, whole_msg, 1, 1*(not warn_fwhm_email), 1*(not warn_centre_email)))
+          alert(subject, alert_msg, 'charm_shift_tool@cern.ch', recipients)
+          dbc.insert_msg((t_now, alert_msg, 1, 1*(not warn_fwhm_email), 1*(not warn_centre_email)))
           dbc.respond(0)
           # FWHM and Centre back to normal
         elif ((last_msg[-3] == 0 or last_msg[-2] == 0 or last_msg[-1] == 0) and response == (0,)):
           print(5)
           #Keep sending messages until user responds
-          alert('Resending ' + subject, whole_msg, 'charm_shift_tool@cern.ch', recipients)
+          alert('Resending ' + subject, alert_msg, 'charm_shift_tool@cern.ch', recipients)
       elif ((last_msg[-3] == 0 or last_msg[-2] == 0 or last_msg[-1] == 0) and response == (0,)):
         print(5)
         #Keep sending messages until user responds
-        alert('Resending ' + subject, whole_msg, 'charm_shift_tool@cern.ch', recipients)
+        alert('Resending ' + subject, alert_msg, 'charm_shift_tool@cern.ch', recipients)
 
     del dbc
-    print(whole_msg)
+    print(alert_msg)
     time.sleep(600)
 
 if __name__ == "__main__":
