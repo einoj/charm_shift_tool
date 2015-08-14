@@ -1,22 +1,22 @@
-* TODO User interface [5/15]
+* TODO User interface [11/15]
 - [X] Setting for amount of time the beam is down before a message is sent
 - [X] Setting for how much the intesity has to increase/decrease before a message is sent
 - [X] Setting for how much the dose rate per hour has to change before a message is sent
-- [ ] Update text view with last two messages
-- [ ] Connect the GUI to the rest of the program
+- [X] Update text view with last X messages
+- [X] Connect the GUI to the rest of the program
 - [X] Load data base settings on startup
 - [ ] Option to set when a day starts and ends, for example 1400 to 0200
 - [ ] option for maximum number of sms sent.
 - [X] The program should keep sending notifications until the user accepts the reply
-- [ ] Automatic resize of admin interface
-- [ ] Look into removing set shifter functions and only use insert_shifter instad
-- [ ] Automatically load the check box values
+- [X] Automatic resize of admin interface
+- [X] Look into removing set shifter functions and only use insert_shifter instad
+- [X] Automatically load the check box values
 - [ ] add setting for bpm references
 - [ ] add password 
-- [ ] make it possible to launch the admin interface from the webpage
+- [X] make it possible to launch the admin interface from the webpage
 
   
-* TODO Message Contents [7/9]
+* TODO Message Contents [8/9]
 - [ ] How long has the beam been down
 - [X] Mean intensity of the BPM 
 - [X] Mean intensity of the MWPC
@@ -25,7 +25,7 @@
 - [X] Intensity of beam, from SEC 1
 - [X] Check centering of the beam for BPM and MWPC
 - [X] Should be checking beam intensity first, but it doesn't
-- [ ] Response is not set to 0 when beam goes down, fix it.
+- [X] Response is not set to 0 when beam goes down, fix it.
   
 * TODO Data retrival [9/10]
 - [X] Write code to download BPM data from https://ps-irrad.web.cern.ch/irrad/bpm.php
@@ -40,7 +40,7 @@
 - [X] Check that there is a sec sample at least 80% of the last minutes, for example 8 samples in the last 10 minutes.
   This is done to avoid the FWHM warning and Centre warinng being sent before the beam down warning.
 
-* TODO Messaging [5/7]
+* TODO Messaging [7/8]
 - [X] Find a way to avoid sending an error message several times for discrepancies in the same varible.
   As an example if the FHWM of BPM4 decreases to under 70% of the reference, send an email, but don't
   send a new email about it before after it has gone back to normal.
@@ -50,17 +50,19 @@
 - [X] Set them to 0 when their respective statuses goes down, for example if the intensity is too low, set beam to 0.
 - [X] Then set them to 1 after a user responds.
 - [X] Consider using only one respond button.
-- [ ] Send an email when beam is centered/fwhm is ok again
+- [X] Send an email when beam is centered/fwhm is ok again
 - [ ] Resending works when beam is down, not tested for centering and fwhm. Do the test.
+- [X] Add all shifters from google doc that do not exist in the database every loop of charm_shift_tool
   
-* TODO Extract shifter [2/3]
+* DONE Extract shifter [4/4]
 - [X] Have to add an 'x' or something like it to each cell in the spread sheet that has a shifter.
   This is because extracting fomrating like color is not supported in the google spread sheet API, 
   and is not likely to be supported in the near future as it has been a reported issue since 2007
   https://code.google.com/a/google.com/p/apps-api-issues/issues/detail?can=2&start=0&num=100&q=&colspec=Stars%20Opened%20ID%20Type%20Status%20Summary%20API%20Owner&groupby=&sort=&id=37
 - [X] Write a function that has a date as parameter and returns the name of the shifter.
-- [ ] Input the email + phone number of the shifters into the data base using their sheet name as key.
-- [ ] Run the function together with the main function and put the user into the database, as the web version of python does not have gspread
+- [X] Input the email + phone number of the shifters into the data base using their sheet name as key.
+- [X] Run the function together with the main function and put the user into the database,
+  as the web version of python does not have gspread
 
 * TODO Database for strong references and settings [6/6]
 - [X] Setup SQLITE3 database
@@ -94,6 +96,7 @@
 - [ ] Angle problem. Should send message if bpms are off for more than 10 to 20 spills. do 10 to 20 spills
   because the bpms are often off for a couple off spills, depending on what experiment that gets beam
   before a spill is sent to charm the delta time for changing magnets settings can be too large.
+- [ ] Catch database not found error
   
 
 
