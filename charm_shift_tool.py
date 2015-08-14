@@ -69,7 +69,11 @@ def check_MWPC():
 
 def check_SEC():
   db_cmd = db_commands()
-  deviation = db_cmd.get_setting('deviation')/100.
+  dv = db_cmd.get_setting('deviation')
+  if dv == None:
+    #if there is no deviation setting use 30 as default
+    dv = 30
+  deviation = dv/100.
   del db_cmd
   s = SEC()
   data = s.get_data()

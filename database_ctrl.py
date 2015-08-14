@@ -1,10 +1,9 @@
 # Functions for interacting with the sqltie3 database
-
 import sqlite3
 from itertools import chain
 
-database  = '//cern.ch/dfs/Websites/t/test-charmShiftTool/data/charm_shift.db'
-#database = './charm_shift.db'
+#database  = '//cern.ch/dfs/Websites/t/test-charmShiftTool/data/charm_shift.db'
+database = './charm_shift.db'
 set_table = 'settings'
 msg_table = 'messages'
 #status_table 'status'
@@ -197,8 +196,8 @@ class db_commands:
       setting = self.cur.fetchone()
       try:
         setting = int(setting[2])
-      except NoneType:
-          return None
+      except TypeError:
+        return None
       return setting
 
     def insert_msg(self, data):
