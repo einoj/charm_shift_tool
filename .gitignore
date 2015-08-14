@@ -4,3 +4,5 @@ tool-cred.json
 __pycache__/
 *.db
 phantomjs.exe
+\#*\#
+.#*
