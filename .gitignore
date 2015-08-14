@@ -1,3 +1,4 @@
 archive/data/
 tool-cred.json
 .*.swp
+__pycache__/
