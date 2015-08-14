@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from database_ctrl import *
 from email_tools import alert
 from database_ctrl import db_commands
-from shifter import get_shifter
+from shifter import get_shifter, get_date, get_all_shifters
 import time
 import urllib
 
@@ -134,6 +134,8 @@ def phone2email(number):
 
 def running():
 
+  # If the shifter changes we want to send an email to the new shifter.
+  prev_shifter = ''
   while True:
     xmsg = ""
     ymsg = ""
@@ -149,11 +151,21 @@ def running():
     warn_fwhm_email = False
 
     dbc = db_commands()
-    shifter = get_shifter()
-    dbc.set_current_shifter(shifter)
+
     last_msg = dbc.get_last_msg()
     response = dbc.get_response()
 
+    # In order for the user and administrator intefaces to see all the shifters, they need to be stored in the database
+    # To make sure that all shifters are stored in the data base we call get_all_shifters on both the database and the google sheet
+    # Then we add all the shifters to the database that are in the google sheet but not yet in the database
+    database_shifters = dbc.get_all_shifters()
+    sheet_shifters = get_all_shifters()
+    for name in sheet_shifters:
+      if name not in database_shifters:
+        dbc.insert_shifter({'name':name, 'email':'', 'phone':0, 'current':0, 'alert':0})
+
+
+    shifter = get_shifter()
     alertees = dbc.get_alerts()
     recipients = []
     if shifter not in alertees:
@@ -166,6 +178,16 @@ def running():
       recipients.append(shifter_info['email'])
       sms = phone2email(shifter_info['phone'])
       recipients.append(sms)
+
+    # Send email if there is a new shifter
+    if prev_shifter != shifter:
+      prev_shifter = shifter
+      dbc.set_current_shifter(shifter)
+      shifttime=1400
+      date,tomorrow = get_date(shifttime)
+      new_shifter_msg = 'Hi {shifter:s},\n\nYou are the CHARM shifter from {date:s} {shifttime:d} until {tomorrow:s} {shifttime:d}.\nBeam info can be found at https://test-charmshifttool.web.cern.ch/test-charmShiftTool/cgi-bin/tool.py\nTo learn more about the shift tool read the document at \\\cern.ch\dfs\Projects\R2E\CHARM\Shifts\Shift Procedure v2.docx\n\nCheers,\nCHARMShiftTool'.format(shifter=shifter, date=date, tomorrow=tomorrow, shifttime=shifttime)
+      print(new_shifter_msg)
+      alert('New CHARM shifter {:s}'.format(shifter), new_shifter_msg, 'charm_shift_tool@cern.ch', recipients)
     
     #check only SEC for intensity
     sec_msg = check_SEC()
@@ -199,6 +221,8 @@ def running():
             alert(subject, whole_msg, 'charm_shift_tool@cern.ch', recipients)
             dbc.insert_msg((t_now, whole_msg, 1*warn_email, 1*warn_fwhm_email, 1*warn_centre_email))
             dbc.respond(0)
+    
+    # Send the alerts if there is something wrong or if th ebeam is up again.
     else:
       if last_msg[-3] == 1 and warn_email:
         print(1)

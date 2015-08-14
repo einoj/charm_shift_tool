@@ -19,10 +19,11 @@ def get_date(shift_start):
     now -= timedelta(hours=24)
 
   date = str(now.day).zfill(2)+ '/' + str(now.month).zfill(2) + '/' + str(now.year)
-  return date
+  tomorrow = str(now.day+1).zfill(2)+ '/' + str(now.month).zfill(2) + '/' + str(now.year)
+  return date, tomorrow
 
 def get_shifter():
- date = get_date(1400)
+ date, tomorrow = get_date(1400)
  gc = login()
  wks = gc.open("CHARM shift schedule 2015")
  sheets = wks.worksheets()
