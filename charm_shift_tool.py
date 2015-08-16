@@ -117,7 +117,7 @@ def phone2email(number):
   if number == '':
     sms_address = number
   elif len(number) == 4:
-    sms_address = sms_address.format(7164)
+    sms_address = sms_address.format(number)
   else:
     number = number.replace('+','00')
     sms_address = '{}@mail2sms.cern.ch'.format(number)
