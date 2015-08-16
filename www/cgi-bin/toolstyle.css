@@ -1,8 +1,8 @@
 body{
     margin:4em auto;
-    max-width:50em;
+    max-width:60em;
     line-height:1.6;
-    font-size:18px;
+    font-size:1.3em;
     color:#444;
     padding:0 1em
 }
@@ -13,5 +13,5 @@ h1,h2,h3{
 
 
 b {
-    padding:12px
+    padding:1.2em
 }
