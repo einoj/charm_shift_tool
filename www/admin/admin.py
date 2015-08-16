@@ -36,9 +36,7 @@ print('</fieldset>')
 
 print('<fieldset>')
 print('<legend>Shifter Info</legend>')
-print('<p>')
 print('<ul class="alert"> <li>Alert</li> </ul> <ul class="username"> <li>User Name</li> </ul> <ul class="emailphone"> <li>Email</li> <li>Phone Number</li></ul>')
-print('</p>')
 for user in shifters:
   shifter_info = db_cmd.get_shifter_info(user)
   checked = ""
