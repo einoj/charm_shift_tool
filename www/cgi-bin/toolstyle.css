@@ -1,0 +1,17 @@
+body{
+    margin:4em auto;
+    max-width:50em;
+    line-height:1.6;
+    font-size:18px;
+    color:#444;
+    padding:0 1em
+}
+
+h1,h2,h3{
+    line-height:1.2;
+}
+
+
+b {
+    padding:12px
+}
