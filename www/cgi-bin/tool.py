@@ -47,7 +47,7 @@ print('<b>Current Shifter: ' + str(shifter) + '</b>')
 print('<h2>Last Five Status Message</h2>')
 for msg in msgs:
   print('<h4>'+msg[1]+'</h4>')
-  print(msg[2].replace('\n','<r>'))
+  print(msg[2].replace('\n','<br>'))
 print('</body>')
 print('</html>')
 
