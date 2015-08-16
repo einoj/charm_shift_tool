@@ -18,7 +18,7 @@ print("Content-type:text/html\r\n\r\n")
 print('<html>')
 print('<head>')
 print('<title>CHARM Shift Tool</title>')
-print('<style type="text/css">body{margin:40px auto;max-width:650px;line-height:1.6;font-size:18px;color:#444;padding:0 10px}h1,h2,h3{line-height:1.2}b{padding:12px}</style>')
+print('<link rel=stylesheet href="toolstyle.css" type="text/css" media=all>')
 print('</head>')
 print('<body>')
 
@@ -47,7 +47,7 @@ print('<b>Current Shifter: ' + str(shifter) + '</b>')
 print('<h2>Last Five Status Message</h2>')
 for msg in msgs:
   print('<h4>'+msg[1]+'</h4>')
-  print(msg[2].replace('\n','<br>'))
+  print(msg[2].replace('\n','<r>'))
 print('</body>')
 print('</html>')
 
