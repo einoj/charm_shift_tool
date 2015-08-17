@@ -5,7 +5,7 @@ if not exist %install_location% (
     exit /B
 )
 
-::copy cgi-bin\* %install_location%\cgi-bin 
-::copy admin\* %install_location%\admin
+copy tool\* %install_location%
+mkdir %install_location%\admin
+copy admin\* %install_location%\admin\
 
-ls %install_location%\admin
