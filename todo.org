@@ -14,6 +14,8 @@
 - [ ] add setting for bpm references
 - [ ] add password 
 - [X] make it possible to launch the admin interface from the webpage
+- [ ] Include BPM reference values in the user interface
+- [ ] Look into javascript bootstrap
 
   
 * TODO Message Contents [8/9]
