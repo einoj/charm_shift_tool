@@ -172,13 +172,17 @@ def running():
 
     # Send email if there is a new shifter
     if prev_shifter != shifter:
-      prev_shifter = shifter
-      dbc.set_current_shifter(shifter)
-      shifttime=1400
-      date,tomorrow = get_date(shifttime)
-      shifter_msg = new_shifter_msg.format(shifter=shifter, date=date, tomorrow=tomorrow, shifttime=shifttime)
-      print(shifter_msg)
-      alert('New CHARM shifter {:s}'.format(shifter), shifter_msg, 'charm_shift_tool@cern.ch', recipients)
+      if shifter == '':
+        #Something went wrong when getting shifter from google sheet, use prev shifter
+        shifter = prev_shifter
+      else:
+        prev_shifter = shifter
+        dbc.set_current_shifter(shifter)
+        shifttime=1400
+        date,tomorrow = get_date(shifttime)
+        shifter_msg = new_shifter_msg.format(shifter=shifter, date=date, tomorrow=tomorrow, shifttime=shifttime)
+        print(shifter_msg)
+        alert('New CHARM shifter {:s}'.format(shifter), shifter_msg, 'charm_shift_tool@cern.ch', recipients)
     
     #check only SEC for intensity
     sec_msg = check_SEC()
