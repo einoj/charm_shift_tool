@@ -6,5 +6,25 @@
 yum update
 yum install git
 
-#install python3
+# install davfs
+yum install davfs
+
+# add dfs to fstab and mount dfs
+mkdir /dfs
+https://dfs.cern.ch/dfs /dfs davfs user,noauto,file_mode=600,dir_mode=700 0 1
+
+# install python3
+
+# install python3-virtualenv
+
 # Create a new charmshift user
+
+# log into charmshift user
+su charmshift
+
+# create python3 virtualenv and install all dependencies
+
+# download repository from github
+git clone https://github.com/einoj/charm_shift_tool.git
+
+#run charm_shift_tool and auto screenshot tool
