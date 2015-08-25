@@ -7,7 +7,7 @@ yum -y update
 yum -y install git
 
 # install davfs
-yum -y install davfs
+yum -y install davfs2
 
 # add dfs to fstab and mount dfs
 mkdir /dfs
