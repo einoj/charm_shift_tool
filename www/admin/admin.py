@@ -8,8 +8,8 @@ shifters = db_cmd.get_all_shifters()
 alertees = db_cmd.get_alerts()
 
 ref_lables =['downtime','deviation', 'sec_ref','mwpc_V_FWHM',  'mwpc_V_center', 'mwpc_H_FWHM', 'mwpc_H_centre'] 
-ref_tags = {'downtime':'Down time before users are alerted [min]','deviation':'Deviation before users are alerted [%]', 'sec_ref':'SEC reference [e10]','mwpc_V_FWHM':'MWPC vertical FWHM reference [mm]',  'mwpc_V_center':'MWPC vertical centre reference [e-1mm]', 'mwpc_H_FWHM':'MWPC horizontal FWHM reference [mm]', 'mwpc_H_centre':'MWPC horizontal centre reference [e-1mm]'}
-ref_vals = {'downtime':10,'deviation':30, 'sec_ref':35,'mwpc_V_FWHM':67, 'mwpc_V_center':16, 'mwpc_H_FWHM':89, 'mwpc_H_centre':65}
+ref_tags = {'downtime':'Down time before users are alerted [min]','deviation':'Deviation before users are alerted [%]', 'sec_ref':'SEC reference [e2]','mwpc_V_FWHM':'MWPC vertical FWHM reference [mm]',  'mwpc_V_center':'MWPC vertical centre reference [e-1mm]', 'mwpc_H_FWHM':'MWPC horizontal FWHM reference [mm]', 'mwpc_H_centre':'MWPC horizontal centre reference [e-1mm]'}
+ref_vals = {'downtime':10,'deviation':30, 'sec_ref':164,'mwpc_V_FWHM':67, 'mwpc_V_center':16, 'mwpc_H_FWHM':89, 'mwpc_H_centre':65}
 
 print('Content-type:text/html\r\n\r\n')
 print('<html>')

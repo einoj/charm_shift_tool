@@ -77,7 +77,12 @@ def check_SEC():
   del db_cmd
   s = SEC()
   data = s.get_data()
-  reference = 3.5e11
+  # intensity is the average over 15 minutes
+  # tested at 20/08/2015  20:57:03 1.65e04
+  # tested at 24/08/2015  20:57:02 1.62e04
+  # tested at 20/08/2015  12:12:49 1.66e04
+  # average is 1.64e04
+  reference = 1.64e4
   now = datetime.now()
   msg = ''
   warning = '{} - PROBLEM! NO BEAM!'.format(datetime.now())
