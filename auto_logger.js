@@ -1,6 +1,6 @@
 var page = require('webpage').create(), loadInProgress = false, fs = require('fs');
 var htmlFiles = ['http://ps-irrad.web.cern.ch/irrad/intensityAll.php','http://ps-irrad.web.cern.ch/irrad/bpm.php?bpmid=BPM_01','http://thornton.web.cern.ch/charm_mwpc.html','https://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr=CPS'];
-var images = ['//cern.ch/dfs/Websites/t/test-charmShiftTool/screens/bpm_all', '//cern.ch/dfs/Websites/t/test-charmShiftTool/screens/bpm1', '//cern.ch/dfs/Websites/t/test-charmShiftTool/screens/mwpc', '//cern.ch/dfs/Websites/t/test-charmShiftTool/screens/op'];
+var images = ['//cern.ch/dfs/Websites/c/charmshifttool/screens/bpm_all', '//cern.ch/dfs/Websites/c/charmshifttool/screens/bpm1', '//cern.ch/dfs/Websites/c/charmshifttool/screens/mwpc', '//cern.ch/dfs/Websites/c/charmshifttool/screens/op'];
  
 console.log('Number of Html Files: ' + htmlFiles.length);
 var width = 1920;

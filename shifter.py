@@ -1,4 +1,5 @@
 import json
+import traceback
 import gspread
 from oauth2client.client import SignedJwtAssertionCredentials
 from datetime import datetime, timedelta
@@ -41,6 +42,7 @@ def get_shifter():
         shifter = worksheet.cell(1,col).value
         return shifter
     except:
+        print(traceback.format_exc())
         return ''
 
 def get_all_shifters():

@@ -42,13 +42,13 @@ def sec_screens():
     xticks(rotation=70)
     tight_layout()
 
-    savefig('//cern.ch/dfs/Websites/t/test-charmShiftTool/screens/sec.png', dpi=220)
+    savefig('//cern.ch/dfs/Websites/c/charmshifttool/screens/sec.png', dpi=220)
 
 def web_screens():
   p = subprocess.Popen('./phantomjs.exe ./auto_logger.js', stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 if __name__ == "__main__":
-  directory = '//cern.ch/dfs/Websites/t/test-charmShiftTool/screens/'
+  directory = '//cern.ch/dfs/Websites/c/charmshifttool/screens/'
   while True:
     sec_screens()
     web_screens()

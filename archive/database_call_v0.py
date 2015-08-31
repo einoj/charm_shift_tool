@@ -2,6 +2,7 @@ import subprocess
 import os
 
 class lgdb_tools(object):
+
     def __init__(self):
         self.java    = self.get_java_install_location()#r'C:\Program Files (x86)\Java\jre7\bin\java.exe'
         #self.java    = r'C:\Program Files\Java\jre7\bin\java.exe'
@@ -19,9 +20,9 @@ class lgdb_tools(object):
         #retstr = subprocess.check_output(["java", "-version"],stderr=subprocess.STDOUT,shell=True)
         #retstr = retstr[:-2] # remove the \r\n, or java wont run
         #retstr = retstr.decode("utf-8")
-        retstr = "C:\Program Files\Java\jre7\\bin\java.exe" 
+        retstr = "C:\Program Files\Java\jre1.8.0_60\\bin\java.exe" 
         if not os.path.isfile(retstr):
-          print("Error: Please install Java to " + "C:\Program Files\Java\jre7\\bin\java.exe")
+          print("Error: Please install Java to " + "C:\Program Files\Java\jre1.8.0_60\\bin\java.exe")
           exit(-1)
       elif osname == "posix":
         retstr = subprocess.check_output(["which", "java"])

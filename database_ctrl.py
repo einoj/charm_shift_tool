@@ -2,7 +2,8 @@
 import sqlite3
 from itertools import chain
 
-database  = '//cern.ch/dfs/Websites/t/test-charmShiftTool/data/charm_shift.db'
+#database  = '//cern.ch/dfs/Websites/t/test-charmShiftTool/data/charm_shift.db'
+database  = '//cern.ch/dfs/Websites/c/charmshifttool/data/charm_shift.db'
 #database = './charm_shift.db'
 set_table = 'settings'
 msg_table = 'messages'

@@ -82,7 +82,7 @@ def check_SEC():
   # tested at 24/08/2015  20:57:02 1.62e04
   # tested at 20/08/2015  12:12:49 1.66e04
   # average is 1.64e04
-  reference = 1.64e4
+  reference = 1.64e04*calibration['SEC1']
   now = datetime.now()
   msg = ''
   warning = '{} - PROBLEM! NO BEAM!'.format(datetime.now())
@@ -113,7 +113,7 @@ def check_SEC():
   except:
     return warning
   if ((intensity > (1+deviation)*reference) or (intensity < (1-deviation)*reference)):
-    msg =  'SEC1 intesity: ' + str(intensity) + ' reference: ' + str(intensity)
+    msg =  'SEC1 intesity: ' + str(intensity) + ' reference: ' + str(reference)
   return msg
 
 def phone2email(number):
@@ -175,6 +175,7 @@ def running():
       sms = phone2email(shifter_info['phone'])
       recipients.append(sms)
 
+    recipients = ['einoju@gmail.com']
     # Send email if there is a new shifter
     if prev_shifter != shifter:
       if shifter == '':
