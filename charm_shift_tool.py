@@ -175,7 +175,6 @@ def running():
       sms = phone2email(shifter_info['phone'])
       recipients.append(sms)
 
-    recipients = ['einoju@gmail.com']
     # Send email if there is a new shifter
     if prev_shifter != shifter:
       if shifter == '':
