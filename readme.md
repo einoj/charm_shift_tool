@@ -18,3 +18,7 @@ https://wikis.cern.ch/pages/viewpage.action?pageId=54067820&src=contextnavpagetr
 - gspread
 - oauth2client
 - PyOpenSSL
+
+### For screnshot tool
+- pyparsing
+- matplotlib
