@@ -9,7 +9,7 @@ https://wikis.cern.ch/pages/viewpage.action?pageId=54067820&src=contextnavpagetr
 - Python 3.X 32-bit
 - Java 7.x
 - Numpy
-- Pandas
+- Pandas, six, python-dateutil, pytz
 - python-dateutil
 - scipy
 
