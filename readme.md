@@ -8,17 +8,19 @@ https://wikis.cern.ch/pages/viewpage.action?pageId=54067820&src=contextnavpagetr
 
 - Python 3.X 32-bit
 - Java 7.x
-- Numpy
-- Pandas, six, python-dateutil, pytz
-- python-dateutil
+## Python packages 
+- Numpy (It is easiest to download numpy from http://www.scipy.org/scipylib/download.html, get the latest 32-bit version for the python3.x version you are running)
 - scipy
 
-### For extracting user data from google sheets
+###The following can be installed used the command pip install e.g. pip install pandas
+- Pandas
+
+#### For extracting user data from google sheets
 
 - gspread
 - oauth2client
 - PyOpenSSL
 
-### For screnshot tool
+#### For screnshot tool
 - pyparsing
 - matplotlib
