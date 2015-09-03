@@ -37,17 +37,28 @@ if status[2]:
 else:
   print('<b>Beam Centre: <font color=#FF0000>DOWN</b></font>')
 print('<p>')
+print('<div class="response">')
 if response == (1,):
   print('<button type="button" disabled="disabled"> Respond</button>')
 else:
-  print('<form name="input" action="/test-charmShiftTool/cgi-bin/respond.py" method="get">')
+  print('<form name="input" action="/respond.py" method="get">')
   print('<input type="submit" value="Respond">')
+print('</div>')
 print('</p>')
 print('<b>Current Shifter: ' + str(shifter) + '</b>')
 print('<h2>Last Five Status Message</h2>')
+backgrounds = ['msg_first', 'msg_second'] 
+bg_index = 0
 for msg in msgs:
+  #print('<hr>')
+  print('<div class="{:s}">'.format(backgrounds[bg_index]))
+  if bg_index == 0:
+      bg_index = 1
+  else: 
+      bg_index = 0
   print('<h4>'+msg[1]+'</h4>')
   print(msg[2].replace('\n','<br>'))
+  print('</div>')
 print('</body>')
 print('</html>')
 
