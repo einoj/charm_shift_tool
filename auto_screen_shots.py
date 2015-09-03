@@ -50,6 +50,7 @@ def web_screens():
 if __name__ == "__main__":
   directory = '//cern.ch/dfs/Websites/c/charmshifttool/screens/'
   while True:
+    print('WORKING: Starting New Loop')
     sec_screens()
     web_screens()
     print('Creating zip file')
