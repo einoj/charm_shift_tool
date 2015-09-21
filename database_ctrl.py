@@ -170,8 +170,11 @@ class db_commands:
 
     def get_shifter_info(self, name):
       self.load_db()
-      self.cur.execute("select * from " + shifter_table + " where name='" + name + "'")
-      shifter = self.cur.fetchone()
+      try:
+        self.cur.execute("select * from " + shifter_table + " where name='" + name + "'")
+        shifter = self.cur.fetchone()
+      except TypeError:
+        shifter = None
       self.close_db()
       shifter_dict = {}
       if shifter != None:
