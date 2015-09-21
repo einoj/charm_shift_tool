@@ -150,6 +150,14 @@ def running():
 
     last_msg = dbc.get_last_msg()
     response = dbc.get_response()
+    downtime = dbc.get_setting('downtime')
+    try:
+      downtime = int(downtime)
+    except ValueError:
+      #downtime was not a string; wait time 10 minutes by default
+      downtime = 10
+      print('ERROR: downtime in database was not a string, sleeping for defualt 10 min')
+    downtime *= 60 #multiply by 60 to get seconds
 
     # In order for the user and administrator intefaces to see all the shifters, they need to be stored in the database
     # To make sure that all shifters are stored in the data base we call get_all_shifters on both the database and the google sheet
@@ -258,7 +266,7 @@ def running():
 
     del dbc
     print(alert_msg)
-    time.sleep(600)
+    time.sleep(downtime)
 
 if __name__ == "__main__":
     running()
