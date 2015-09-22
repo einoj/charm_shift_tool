@@ -131,7 +131,6 @@ def phone2email(number):
 def running():
 
   # If the shifter changes we want to send an email to the new shifter.
-  prev_shifter = ''
   while True:
     xmsg = ""
     ymsg = ""
@@ -151,6 +150,8 @@ def running():
     last_msg = dbc.get_last_msg()
     response = dbc.get_response()
     downtime = dbc.get_setting('downtime')
+    prev_shifter = dbc.get_current_shifter()
+
     try:
       downtime = int(downtime)
     except ValueError:
@@ -167,7 +168,6 @@ def running():
     for name in sheet_shifters:
       if name not in database_shifters:
         dbc.insert_shifter({'name':name, 'email':'', 'phone':0, 'current':0, 'alert':0})
-
 
     shifter = get_shifter()
     alertees = dbc.get_alerts()

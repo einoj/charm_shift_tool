@@ -123,6 +123,8 @@ class db_commands:
       self.close_db()
 
     def get_current_shifter(self):
+      """Return current shifter stored in database
+      """
       self.load_db()
       self.cur.execute("select name from " + shifter_table + " where current = 1")
       shifter = self.cur.fetchone()
